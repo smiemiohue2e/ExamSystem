@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.ClassMapper">
+
+	<resultMap id="classMapper" type="ClassDO">
+        <result property="id" column="id"/>
+        <result property="cno" column="cno"/>
+        <result property="fkGrade" column="fk_grade"/>
+        <result property="fkMajor" column="fk_major"/>
+        <result property="delFlag" column="del_flag"/>
+	</resultMap>
+
+    <sql id="_table">
+        class
+	</sql>
+
+	<sql id="_fields">
+		id,cno,fk_grade,fk_major,del_flag
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="cno!=null">
+				AND cno = #{cno}
+			</if>
+            <if test="fkGrade!=null">
+				AND fk_grade = #{fkGrade}
+			</if>
+            <if test="fkMajor!=null">
+				AND fk_major = #{fkMajor}
+			</if>
+            <if test="delFlag!=null">
+				AND del_flag = #{delFlag}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addClass" parameterType="ClassVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="cno!=null">
+				cno,
+			</if>
+            <if test="fkGrade!=null">
+				fk_grade,
+			</if>
+            <if test="fkMajor!=null">
+				fk_major,
+			</if>
+            <if test="delFlag!=null">
+				del_flag,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="cno!=null">
+				#{cno},
+			</if>
+            <if test="fkGrade!=null">
+				#{fkGrade},
+			</if>
+            <if test="fkMajor!=null">
+				#{fkMajor},
+			</if>
+            <if test="delFlag!=null">
+				#{delFlag},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateClass" parameterType="ClassVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="cno!=null">
+				cno = #{cno},
+			</if>
+            <if test="fkGrade!=null">
+				fk_grade = #{fkGrade},
+			</if>
+            <if test="fkMajor!=null">
+				fk_major = #{fkMajor},
+			</if>
+            <if test="delFlag!=null">
+				del_flag = #{delFlag},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailClass" resultMap="classMapper" parameterType="ClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listClass" resultMap="classMapper" parameterType="ClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listClassPage" resultMap="classMapper" parameterType="ClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countClass" resultType="java.lang.Integer" parameterType="ClassVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteClass" parameterType="ClassVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+    <!--自定义分页查询-->
+    <select id="listClassAssociation" resultMap="listClassMap" parameterType="classVo">
+      SELECT
+    class.id,
+    class.cno,
+    grade.id gid,
+    grade.grade,
+    major.id mid,
+    major.`name` major,
+    class.cno clazz
+    FROM
+    class
+    INNER JOIN grade ON class.fk_grade = grade.id
+    INNER JOIN major ON class.fk_major = major.id
+    </select>
+
+    <resultMap id="listClassMap" type="classListVo">
+        <id property="id" column="id"></id>
+        <result property="cno" column="cno"></result>
+        <association property="grade" javaType="gradeDo">
+            <id property="id" column="gid"></id>
+            <result property="grade" column="grade"></result>
+        </association>
+        <association property="major" javaType="majorDo">
+            <id property="id" column="mid"></id>
+            <result property="name" column="major"></result>
+        </association>
+    </resultMap>
+
+</mapper>

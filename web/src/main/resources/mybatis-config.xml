@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!--驼峰命名-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--使用jdbc的getGenerateKeys获取数据库自增主键值-->
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+    <!--别名-->
+    <typeAliases>
+<!--
+        扫描指定的包：类名首字母小写作为别名
+-->
+        <package name="com.wx.exam.pojo"/>
+    </typeAliases>
+
+</configuration>

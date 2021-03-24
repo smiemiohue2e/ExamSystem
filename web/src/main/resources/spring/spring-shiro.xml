@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <description>
+        Shiro安全配置
+        1. 配置安全管理器
+        2. 设置过滤器的规则
+        3. 配置自定义的realm
+        4. 设置加密算法
+    </description>
+
+
+    <!--自定义shiro过滤器-->
+    <bean id="adminLogoutfilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/login"></property>
+    </bean>
+
+    <!--
+           除了已经设置的其他路径的认证
+       -->
+    <!-- shiro工厂bean配置 -->
+    <bean id="shirofilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+       <!-- shiro的核心安全接口-->
+        <property name="securityManager" ref="securityManager"/>
+        <!--要求登陆时的连接-->
+        <property name="loginUrl" value="/index.jsp"/>
+        <!-- 登录成功后要跳转的连接(此处已经在登录中处理了) -->
+        <!-- <property name="successUrl" value="/index.jsp"></property> -->
+        <!-- 未认证时要跳转的连接 -->
+        <property name="unauthorizedUrl" value="/500.jsp"/>
+
+        <!--配置过滤器-->
+        <property name="filters">
+            <map>
+                <entry key="adminLogout" value-ref="adminLogoutfilter"></entry>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                <!--对静态资源设置允许匿名访问-->
+                /static/**=anon
+                /404.jsp=anon
+                /500.jsp=anon
+                <!--登陆相关设置允许匿名访问-->
+                /login=anon
+                /kaptcha.jpg=anon
+                /login/verify=anon
+                /login/do=anon
+                /**/logout=adminLogout
+
+                /**=authc
+            </value>
+        </property>
+    </bean>
+
+    <!--配置shiro安全管理器-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="userRealm"/>
+    </bean>
+
+    <!--自定义realm-->
+    <bean id="userRealm" class="com.wx.exam.shiro.UserRealm">
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+    </bean>
+
+    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+       <!--MD5算法-->
+        <property name="hashAlgorithmName" value="md5"/>
+    </bean>
+</beans>
