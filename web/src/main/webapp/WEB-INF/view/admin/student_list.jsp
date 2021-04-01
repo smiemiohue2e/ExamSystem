@@ -39,7 +39,7 @@
                         <div class="bootstrap-admin-no-table-panel-content bootstrap-admin-panel-content collapse in">
                             <div class="col-lg-4 form-group">
                                 <label class="control-label">姓名</label>
-                                <input class="form-control" name="search" type="text">
+                                <input class="form-control" name="search" value="${search}" type="text">
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary">搜索
@@ -64,9 +64,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${pageBean.list}" var="student">
+                    <c:choose>
+                        <c:when test="${pageBean.list!=null&&pageBean.list.size()>0}">
+                        <c:forEach items="${pageBean.list}" var="student">
                         <tr>
-                            <td>${student.id}</td>
+                            <input id="studentId" value="${student.id}"  type="hidden">
+
+                            <td>${student.sno}</td>
                             <td>${student.name}</td>
                             <td>${student.grade.grade}级${student.major.name}${student.clazz.cno}班</td>
                             <td>
@@ -76,6 +80,14 @@
                             </td>
                         </tr>
                     </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                        </c:otherwise>
+                    </c:choose>
                     </tbody>
                 </table>
                 <div class="pull-right">
@@ -84,7 +96,7 @@
                     <script type="text/javascript">
                         function page(pageCode) {
                             var search = document.getElementById("search_content").value;
-                            window.location.href = "${pageContext.request.contextPath}/admin/student/list?pn=" + pageCode + "&search=" + search;
+                            window.location.href = "${pageContext.request.contextPath}/admin/student/list?pageCode=" + pageCode + "&search=" + search;
                         }
                     </script>
                     <jsp:include page="../share/page.jsp"></jsp:include>
@@ -205,7 +217,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">学生姓名</label>
                         <div class="col-sm-6">
-                            <input class="form-control" type="text" name="student" id="student_edit_name">
+                            <input class="form-control" type="text" name="student" id="student_edit_name" disabled>
                         </div>
                     </div>
 

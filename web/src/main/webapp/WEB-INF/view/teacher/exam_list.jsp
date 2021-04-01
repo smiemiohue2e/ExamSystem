@@ -15,14 +15,16 @@
     <base href="<%=basePath%>">
     <link rel="SHORTCUT ICON" href="${pageContext.request.contextPath}/static/images/icon.ico">
     <link rel="BOOKMARK" href="${pageContext.request.contextPath}/static/images/icon.ico">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css"
           href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap-admin-theme.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/head.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/list_main.css">
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/script/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="${pageContext.request.contextPath}/static/bootstrap/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/static/script/teacher/exam_list.js"></script>
     <script src="${pageContext.request.contextPath}/static/script/time.js"></script>
     <script src="${pageContext.request.contextPath}/static/script/tips.js"></script>
@@ -44,6 +46,31 @@
         <div class="col-md-10">
             <div class="row">
                 <div class="col-lg-12">
+                    <div class="panel panel-default bootstrap-admin-no-table-panel">
+                        <div class="panel-heading">
+                            <div class="text-muted bootstrap-admin-box-title">查询</div>
+                        </div>
+                        <div class="bootstrap-admin-no-table-panel-content bootstrap-admin-panel-content collapse in">
+                            <form class="form-horizontal"
+                                  action="${pageContext.request.contextPath}/teacher/subjectManageAction_querySubject.action"
+                                  method="post">
+                                <div class="col-lg-5 form-group">
+                                    <label class="col-lg-4 control-label" for="query_ano">试卷名称</label>
+                                    <div class="col-lg-8">
+                                        <input class="form-control" type="text" id="subjectName" name="subjectName">
+                                        <label class="control-label" for="subjectName" style="display: none;"></label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 form-group">
+                                    <button type="submit" class="btn btn-primary" id="btn_query" onclick="query()">查询
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="btn_add" data-toggle="modal"
+                                            data-target="#addModal">添加
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -52,11 +79,11 @@
                         <thead>
                         <tr>
                             <th width="10%">id</th>
-                            <th width="25%">标题</th>
+                            <th width="20%">标题</th>
                             <th width="20%">适用班级</th>
                             <th width="20%">状态</th>
-                            <th width="15%">切换状态</th>
-                            <th width="20%">操作</th>
+                            <th width="10%">切换状态</th>
+                            <th width="25%">操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -70,7 +97,14 @@
                                     </button>
                                 </td>
                                 <c:choose>
-                                    <c:when test="${exam.status == 'NOTRUN'}">
+
+                                    <c:when test="${exam.fkStatus == 1}">
+                                        <td>未初始化</td>
+                                        <td>
+                                            无操作项
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${exam.fkStatus == 2}">
                                         <td>尚未运行</td>
                                         <td>
                                             <button class="btn btn-success btn-xs"
@@ -78,7 +112,7 @@
                                             </button>
                                         </td>
                                     </c:when>
-                                    <c:when test="${exam.status == 'RUNNING'}">
+                                    <c:when test="${exam.fkStatus == 3}">
                                         <td>正在运行</td>
                                         <td>
                                             <button class="btn btn-danger btn-xs" name="stop-run-btn">立即停止</button>
@@ -99,6 +133,9 @@
                                     <input type="hidden" name="limit" value="${exam.timelimit}"/>
                                     <button class="btn btn-info btn-xs" name="show-edit-btn">编辑</button>
                                     <button class="btn btn-danger btn-xs" name="delete-exam-btn">删除</button>
+                                    <button name="btn_questions" class="btn btn-danger btn-xs">
+                                        <a href="/teacher/exam/examManager/${exam.id}">试题</a>
+                                    </button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -109,7 +146,7 @@
                         <!-- 用于javascript提交，搜索内容 -->
                         <script type="text/javascript">
                             function page(pageCode) {
-                                window.location.href = "${pageContext.request.contextPath}/teacher/exam/list?pn="
+                                window.location.href = "${pageContext.request.contextPath}/teacher/exam/list?pageCode="
                                     + pageCode;
                             }
                         </script>
@@ -119,6 +156,74 @@
             </div>
         </div>
     </div>
+</div>
+
+
+<!--------------------添加试卷的模糊框------------------------>
+<!-- 模态框（Modal） -->
+<div class="modal fade form-horizontal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    添加新的试卷
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">试卷名称</label>
+                    <div class="col-sm-7">
+                        <input type="text" name="title" class="form-control" id="addSubjectName"
+                               placeholder="请输入试卷名称">
+                        <label class="control-label" for="addSubjectName" style="display:none;"></label>
+                    </div>
+                </div>
+                <%--<div class="form-group">--%>
+                <%--<label class="col-sm-3 control-label">专业</label>--%>
+                <%--<div class="col-sm-7">--%>
+                <%--<select class="form-control" id="addCourse">--%>
+                <%--<option value="-1">请选择</option>--%>
+                <%--</select>--%>
+                <%--<label class="control-label" for="addCourse" style="display: none;"></label>--%>
+                <%--</div>--%>
+                <%--</div>--%>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">考试时间</label>
+                    <div class="col-sm-7">
+                        <input type="text" name="timelimit" class="form-control" id="addSubjectTime"
+                               placeholder="请输入考试时间">
+                        <label class="control-label" for="addSubjectTime" style="display:none;"></label>
+                    </div>
+                </div>
+                <%--<div class="form-group">--%>
+                <%--<label class="col-sm-3 control-label">选择题分数</label>--%>
+                <%--<div class="col-sm-7">--%>
+                <%--<input type="text" class="form-control" id="addChoiceScore" placeholder="请输入选择题的分值">--%>
+                <%--<label class="control-label" for="addChoiceScore" style="display:none;"></label>--%>
+                <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="form-group">--%>
+                <%--<label class="col-sm-3 control-label">判断题分数</label>--%>
+                <%--<div class="col-sm-7">--%>
+                <%--<input type="text" class="form-control" id="addJudgeScore" placeholder="请输入判断题的分值">--%>
+                <%--<label class="control-label" for="addJudgeScore" style="display:none;"></label>--%>
+                <%--</div>--%>
+                <%--</div>--%>
+                <!---------------------表单-------------------->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="addSubject">
+                    添加
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 
 

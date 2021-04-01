@@ -70,7 +70,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${pageBean.list}" var="teacher">
+                    <c:choose>
+                        <c:when test="${pageBean.list!=null&&pageBean.list.size()>0}">
+                        <c:forEach items="${pageBean.list}" var="teacher">
                         <tr>
                             <td>${teacher.id}</td>
                             <td>${teacher.name}</td>
@@ -84,6 +86,13 @@
                             </td>
                         </tr>
                     </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                        </c:otherwise>
+                    </c:choose>
                     </tbody>
                 </table>
                 <div class="pull-right">
@@ -92,7 +101,7 @@
                     <script type="text/javascript">
                         function page(pageCode) {
                             var search = document.getElementById("search_content").value;
-                            window.location.href = "${pageContext.request.contextPath}/admin/teacher/list?pn=" + pageCode + "&search=" + search;
+                            window.location.href = "${pageContext.request.contextPath}/admin/teacher/list?pageCode=" + pageCode + "&search=" + search;
                         }
                     </script>
                     <jsp:include page="../share/page.jsp"></jsp:include>

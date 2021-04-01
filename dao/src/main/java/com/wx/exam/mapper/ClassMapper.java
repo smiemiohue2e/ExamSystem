@@ -4,6 +4,8 @@ package com.wx.exam.mapper;
 import com.wx.exam.pojo.data.ClassDO;
 import com.wx.exam.pojo.vo.ClassListVO;
 import com.wx.exam.pojo.vo.ClassVO;
+import com.wx.exam.pojo.vo.ExamVO;
+import com.wx.exam.pojo.vo.TeacherVO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,4 +30,8 @@ public interface ClassMapper {
 
     //自定义分页查询
     List<ClassListVO> listClassAssociation(ClassVO classVO);
+
+    List<ClassListVO> listClassByTeacher(TeacherVO teacherVO);
+
+    List<ClassListVO> listClassByExam(ExamVO examVO);
 }

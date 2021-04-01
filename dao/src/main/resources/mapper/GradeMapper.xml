@@ -1,198 +1,134 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.wx.exam.mapper.GradeMapper" >
-  <resultMap id="BaseResultMap" type="com.wx.exam.pojo.Grade" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="grade" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="del_flag" jdbcType="BIT" javaType="java.lang.Boolean" />
-    </constructor>
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.GradeMapper">
+
+    <resultMap id="gradeMapper" type="GradeDO">
+        <result property="id" column="id"/>
+        <result property="grade" column="grade"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="_table">
+        grade
+	</sql>
+
+    <sql id="_fields">
+		id,grade,del_flag
+	</sql>
+
+    <sql id="_condition">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="grade!=null">
+                AND grade = #{grade}
+            </if>
+                AND del_flag = 0
+        </trim>
+    </sql>
+
+    <sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+    <sql id="_order">
+        <if test="sortByParams != null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
             </foreach>
-          </trim>
         </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
+    </sql>
+
+    <insert id="addGrade" parameterType="GradeVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                id,
+            </if>
+            <if test="grade!=null">
+                grade,
+            </if>
+            <if test="delFlag!=null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="grade!=null">
+                #{grade},
+            </if>
+            <if test="delFlag!=null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateGrade" parameterType="GradeVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="grade!=null">
+                grade = #{grade},
+            </if>
+            <if test="delFlag!=null">
+                del_flag = #{delFlag},
+            </if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailGrade" resultMap="gradeMapper" parameterType="GradeVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listGrade" resultMap="gradeMapper" parameterType="GradeVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+    </select>
+
+    <select id="listGradePage" resultMap="gradeMapper" parameterType="GradeVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
         </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    id, grade, del_flag
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wx.exam.pojo.GradeExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from grade
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from grade
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from grade
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.wx.exam.pojo.GradeExample" >
-    delete from grade
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="grade">
-    insert into grade (id, grade, del_flag)
-    values (#{id},#{grade},0)
-  </insert>
-  <insert id="insertSelective" parameterType="com.wx.exam.pojo.Grade" >
-    insert into grade
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="grade != null" >
-        grade,
-      </if>
-      <if test="delFlag != null" >
-        del_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="grade != null" >
-        #{grade,jdbcType=INTEGER},
-      </if>
-      <if test="delFlag != null" >
-        #{delFlag,jdbcType=BIT},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.wx.exam.pojo.GradeExample" resultType="java.lang.Integer" >
-    select count(*) from grade
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update grade
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.grade != null" >
-        grade = #{record.grade,jdbcType=INTEGER},
-      </if>
-      <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=BIT},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update grade
-    set id = #{record.id,jdbcType=INTEGER},
-      grade = #{record.grade,jdbcType=INTEGER},
-      del_flag = #{record.delFlag,jdbcType=BIT}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wx.exam.pojo.Grade" >
-    update grade
-    <set >
-      <if test="grade != null" >
-        grade = #{grade,jdbcType=INTEGER},
-      </if>
-      <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=BIT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.wx.exam.pojo.Grade" >
-    update grade
-    set grade = #{grade,jdbcType=INTEGER},
-      del_flag = #{delFlag,jdbcType=BIT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+        <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+            limit 0,15
+        </if>
+    </select>
 
-  <select id="findGrade" resultType="grade" parameterType="grade">
-    select * from grade where grade =#{grade} and del_flag=0
-  </select>
+    <select id="countGrade" resultType="java.lang.Integer" parameterType="GradeVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
 
-  <!--逻辑删除-->
-  <update id="deleteGrade" parameterType="int">
-    update grade set del_flag=1 where id=#{id}
-  </update>
+    <!--此处删除为假删除，需要根据项目逻辑进行处理-->
+    <update id="deleteGrade" parameterType="GradeVO">
+        update grade set del_flag = 1 where id = #{id};
+        <!--DELETE FROM <include refid="_table"/>-->
+        <!--<include refid="_primaryKey_condition"/>-->
+    </update>
 
-  <!--分页查询-->
-  <select id="pageSearch" parameterType="integer" resultType="grade">
-    select * from grade where del_flag=0
-    <if test="_parameter !=null and _parameter !=0">
-      and grade like concat ('%',#{_parameter},'%')
-    </if>
-  </select>
+    <select id="grades" parameterType="com.wx.exam.pojo.vo.GradeVO" resultType="com.wx.exam.pojo.data.GradeDO">
+        select id ,grade from grade where del_flag=0
+        <if test="search!=null">
+            and grade LIKE CONCAT ('%',#{search},'%')
+        </if>
+    </select>
+
 </mapper>

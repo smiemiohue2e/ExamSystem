@@ -1,14 +1,15 @@
 package com.wx.exam.controller;
 
 import com.wx.exam.pojo.Manager;
-import com.wx.exam.pojo.Student;
 import com.wx.exam.pojo.Teacher;
-import com.wx.exam.shiro.UsernameTypePasswordToken;
+import com.wx.exam.pojo.data.ManagerDO;
+import com.wx.exam.pojo.data.StudentDO;
+import com.wx.exam.pojo.data.TeacherDO;
+import com.wx.exam.security.shiro.UsernameTypePasswordToken;
 import com.wx.exam.utils.DataUtils;
 import com.wx.exam.utils.Result;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,17 +38,17 @@ public class LoginController {
         try {
             switch (role){
                 case 1:{
-                    Student student=(Student) subject.getPrincipal();
+                    StudentDO student=(StudentDO) subject.getPrincipal();
                     httpSession.setAttribute("student",student);
                     return "student/index";
                 }
                 case 2:{
-                    Teacher teacher=(Teacher) subject.getPrincipal();
+                    TeacherDO teacher=(TeacherDO) subject.getPrincipal();
                     httpSession.setAttribute("teacher",teacher);
                     return "teacher/index";
                 }
                 case 3:{
-                    Manager Manager = (Manager)subject.getPrincipal();
+                    ManagerDO Manager = (ManagerDO)subject.getPrincipal();
                     httpSession.setAttribute("manager",Manager);
                     return "admin/index";
                 }

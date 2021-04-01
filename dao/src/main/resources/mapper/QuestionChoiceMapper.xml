@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.QuestionChoiceMapper">
+
+	<resultMap id="questionChoiceMapper" type="QuestionChoiceDO">
+        <result property="id" column="id"/>
+        <result property="question" column="question"/>
+        <result property="optiona" column="optionA"/>
+        <result property="optionb" column="optionB"/>
+        <result property="optionc" column="optionC"/>
+        <result property="optiond" column="optionD"/>
+        <result property="answer" column="answer"/>
+        <result property="score" column="score"/>
+        <result property="fkTeacher" column="fk_teacher"/>
+        <result property="delFalg" column="del_falg"/>
+        <result property="type" column="type"/>
+	</resultMap>
+
+    <sql id="_table">
+        question_choice
+	</sql>
+
+	<sql id="_fields">
+		id,question,optionA,optionB,optionC,optionD,answer,score,fk_teacher,del_falg,`type`
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="question!=null and ''!=question">
+				AND question = #{question}
+			</if>
+            <if test="optiona!=null and ''!=optiona">
+				AND optionA = #{optiona}
+			</if>
+            <if test="optionb!=null and ''!=optionb">
+				AND optionB = #{optionb}
+			</if>
+            <if test="optionc!=null and ''!=optionc">
+				AND optionC = #{optionc}
+			</if>
+            <if test="optiond!=null and ''!=optiond">
+				AND optionD = #{optiond}
+			</if>
+            <if test="answer!=null and ''!=answer">
+				AND answer = #{answer}
+			</if>
+            <if test="score!=null">
+				AND score = #{score}
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				AND fk_teacher = #{fkTeacher}
+			</if>
+            <if test="delFalg!=null">
+				AND del_falg = #{delFalg}
+			</if>
+            <if test="type!=null">
+				AND `type` = #{type}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addQuestionChoice" parameterType="QuestionChoiceVO" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="question!=null and ''!=question">
+				question,
+			</if>
+            <if test="optiona!=null and ''!=optiona">
+				optionA,
+			</if>
+            <if test="optionb!=null and ''!=optionb">
+				optionB,
+			</if>
+            <if test="optionc!=null and ''!=optionc">
+				optionC,
+			</if>
+            <if test="optiond!=null and ''!=optiond">
+				optionD,
+			</if>
+            <if test="answer!=null and ''!=answer">
+				answer,
+			</if>
+            <if test="score!=null">
+				score,
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher,
+			</if>
+            <if test="delFalg!=null">
+				del_falg,
+			</if>
+            <if test="type!=null">
+				`type`,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="question!=null and ''!=question">
+				#{question},
+			</if>
+            <if test="optiona!=null and ''!=optiona">
+				#{optiona},
+			</if>
+            <if test="optionb!=null and ''!=optionb">
+				#{optionb},
+			</if>
+            <if test="optionc!=null and ''!=optionc">
+				#{optionc},
+			</if>
+            <if test="optiond!=null and ''!=optiond">
+				#{optiond},
+			</if>
+            <if test="answer!=null and ''!=answer">
+				#{answer},
+			</if>
+            <if test="score!=null">
+				#{score},
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				#{fkTeacher},
+			</if>
+            <if test="delFalg!=null">
+				#{delFalg},
+			</if>
+            <if test="type!=null">
+				#{type},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateQuestionChoice" parameterType="QuestionChoiceVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="question!=null and ''!=question">
+				question = #{question},
+			</if>
+            <if test="optiona!=null and ''!=optiona">
+				optionA = #{optiona},
+			</if>
+            <if test="optionb!=null and ''!=optionb">
+				optionB = #{optionb},
+			</if>
+            <if test="optionc!=null and ''!=optionc">
+				optionC = #{optionc},
+			</if>
+            <if test="optiond!=null and ''!=optiond">
+				optionD = #{optiond},
+			</if>
+            <if test="answer!=null and ''!=answer">
+				answer = #{answer},
+			</if>
+            <if test="score!=null">
+				score = #{score},
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher = #{fkTeacher},
+			</if>
+            <if test="delFalg!=null">
+				del_falg = #{delFalg},
+			</if>
+            <if test="type!=null">
+				`type` = #{type},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailQuestionChoice" resultMap="questionChoiceMapper" parameterType="QuestionChoiceVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listQuestionChoice" resultMap="questionChoiceMapper" parameterType="QuestionChoiceVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listQuestionChoicePage" resultMap="questionChoiceMapper" parameterType="QuestionChoiceVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countQuestionChoice" resultType="java.lang.Integer" parameterType="QuestionChoiceVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteQuestionChoice" parameterType="QuestionChoiceVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+    <select id="listQuestionChoiceByIdIn" parameterType="list" resultType="QuestionChoiceDO">
+        select * from question_choice where id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

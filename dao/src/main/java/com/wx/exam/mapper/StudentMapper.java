@@ -1,31 +1,31 @@
 package com.wx.exam.mapper;
 
-import com.wx.exam.pojo.Student;
-import com.wx.exam.pojo.StudentExample;
-import org.apache.ibatis.annotations.Param;
+import com.wx.exam.pojo.data.StudentDO;
+import com.wx.exam.pojo.vo.ClassListVO;
+import com.wx.exam.pojo.vo.StudentListVO;
+import com.wx.exam.pojo.vo.StudentVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
+@Repository
 public interface StudentMapper {
-    int countByExample(StudentExample example);
 
-    int deleteByExample(StudentExample example);
+    Integer addStudent(StudentVO studentVO);
 
-    int deleteByPrimaryKey(String id);
+    Integer updateStudent(StudentVO studentVO);
 
-    int insert(Student record);
+    StudentDO findDetailStudent(StudentVO studentVO);
 
-    int insertSelective(Student record);
+    List<StudentDO> listStudent(StudentVO studentVO);
 
-    List<Student> selectByExample(StudentExample example);
+    List<StudentDO> listStudentPage(StudentVO studentVO);
 
-    Student selectByPrimaryKey(String id);
+    Integer countStudent(StudentVO studentVO);
 
-    int updateByExampleSelective(@Param("record") Student record, @Param("example") StudentExample example);
+    Integer deleteStudent(StudentVO studentVO);
 
-    int updateByExample(@Param("record") Student record, @Param("example") StudentExample example);
+    List<StudentListVO> listStudentByPage(StudentVO studentVO);
 
-    int updateByPrimaryKeySelective(Student record);
-
-    int updateByPrimaryKey(Student record);
 }

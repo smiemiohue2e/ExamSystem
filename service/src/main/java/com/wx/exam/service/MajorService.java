@@ -1,64 +1,38 @@
 package com.wx.exam.service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.wx.exam.mapper.MajorMapper;
-import com.wx.exam.pojo.Major;
-import com.wx.exam.pojo.MajorExample;
-import com.wx.exam.pojo.vo.MajorQuery;
-import com.wx.exam.utils.DataUtils;
+
+
+import com.wx.exam.pojo.data.MajorDO;
+import com.wx.exam.pojo.vo.GradeVO;
+import com.wx.exam.pojo.vo.MajorVO;
 import com.wx.exam.utils.PageBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import com.wx.exam.utils.Result;
 
 import java.util.List;
 
-@Service
-public class MajorService {
-    @Autowired
-    MajorMapper majorMapper;
+/**
+ * <br/>
+ * Created by weidong on 2018/07/18
+ */
+public interface MajorService {
 
+	Result addMajor(MajorVO majorVO) throws Exception;
 
-    public PageBean<Major> pageSearch(MajorQuery majorQuery) {
-        PageHelper.startPage(DataUtils.getPageCode(majorQuery.getPageCode()+""),majorQuery.getSize());
-        List<Major> majors = majorMapper.pageSearch(majorQuery.getSearch());
-        PageInfo<Major> info=new PageInfo<>(majors);
-        PageBean<Major> pageBean=new PageBean(majors,info.getPageSize(),
-                info.getPageNum(),(int)info.getTotal(),info.getSize()) ;
-        return pageBean;
-    }
+	Result updateMajor(MajorVO majorVO) throws Exception;
+	
+	Result findDetailMajor(MajorVO majorVO) throws Exception;
+	
+	PageBean listMajor(MajorVO majorVO) throws Exception;
 
-    /**
-     * 根据专业名查找
-     * @param major
-     * @return
-     */
-    public boolean findMajor(Major major) {
-        MajorExample majorExample=new MajorExample();
-        MajorExample.Criteria criteria = majorExample.createCriteria();
-        criteria.andNameEqualTo(major.getName());
-        int i = majorMapper.countByExample(majorExample);
-        return i>0;
-    }
+    Result listMajorPage(MajorVO majorVO) throws Exception;
+	
+	Result countMajor(MajorVO majorVO) throws Exception;
+	
+	Result deleteMajor(MajorVO majorVO) throws Exception;
 
-    /**
-     * 添加专业
-     * @param major
-     */
-    public void addMajor(Major major) {
-        majorMapper.addMajor(major);
-    }
-
-    /**
-     * 修改专业
-     * @param major
-     */
-    public void updateMajor(Major major) {
-       /* MajorExample majorExample=new MajorExample();
-        MajorExample.Criteria criteria = majorExample.createCriteria();
-        criteria.andNameEqualTo(major.getName());
-        majorMapper.updateByExample(major,majorExample);*/
-       majorMapper.updateMajor(major);
-    }
+    List<MajorDO> listAll();
+	/**
+	 * 根据年级id查询专业信息
+	 */
+	Result listMajorByGrade(GradeVO majorVO);
 }

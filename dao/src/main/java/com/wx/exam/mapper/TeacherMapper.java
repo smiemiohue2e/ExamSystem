@@ -1,30 +1,34 @@
 package com.wx.exam.mapper;
 
-import com.wx.exam.pojo.Teacher;
-import com.wx.exam.pojo.TeacherExample;
+
+import com.wx.exam.pojo.data.TeacherDO;
+import com.wx.exam.pojo.vo.TeacherVO;
+import com.wx.exam.utils.PageBean;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+/** 
+ * <br/>
+ * Created by weidong on 2018/07/20
+ */
+@Repository
 public interface TeacherMapper {
-    int countByExample(TeacherExample example);
 
-    int deleteByExample(TeacherExample example);
+    Integer addTeacher(TeacherVO teacherVO);
 
-    int deleteByPrimaryKey(String id);
+    Integer updateTeacher(TeacherVO teacherVO);
 
-    int insert(Teacher record);
+    TeacherDO findDetailTeacher(TeacherVO teacherVO);
 
-    int insertSelective(Teacher record);
+    List<TeacherDO> listTeacher(TeacherVO teacherVO);
 
-    List<Teacher> selectByExample(TeacherExample example);
+    List<TeacherDO> listTeacherPage(TeacherVO teacherVO);
 
-    Teacher selectByPrimaryKey(String id);
+    Integer countTeacher(TeacherVO teacherVO);
 
-    int updateByExampleSelective(@Param("record") Teacher record, @Param("example") TeacherExample example);
+    Integer deleteTeacher(TeacherVO teacherVO);
 
-    int updateByExample(@Param("record") Teacher record, @Param("example") TeacherExample example);
 
-    int updateByPrimaryKeySelective(Teacher record);
 
-    int updateByPrimaryKey(Teacher record);
 }

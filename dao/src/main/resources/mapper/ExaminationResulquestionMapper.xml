@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.ExaminationResulquestionMapper">
+
+	<resultMap id="examinationResulquestionMapper" type="ExaminationResulquestionDO">
+        <result property="id" column="id"/>
+        <result property="isRight" column="is_right"/>
+        <result property="wrongAnswer" column="wrong_answer"/>
+        <result property="fkExaminationResult" column="fk_examination_result"/>
+        <result property="fkQuestion" column="fk_question"/>
+        <result property="delFlag" column="del_flag"/>
+	</resultMap>
+
+    <sql id="_table">
+        examination_result_question
+	</sql>
+
+	<sql id="_fields">
+		id,is_right,wrong_answer,fk_examination_result,fk_question,del_flag
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="isRight!=null">
+				AND is_right = #{isRight}
+			</if>
+            <if test="wrongAnswer!=null and ''!=wrongAnswer">
+				AND wrong_answer = #{wrongAnswer}
+			</if>
+            <if test="fkExaminationResult!=null">
+				AND fk_examination_result = #{fkExaminationResult}
+			</if>
+            <if test="fkQuestion!=null">
+				AND fk_question = #{fkQuestion}
+			</if>
+            <if test="delFlag!=null">
+				AND del_flag = #{delFlag}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addExaminationResulquestion" parameterType="ExaminationResulquestionVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="isRight!=null">
+				is_right,
+			</if>
+            <if test="wrongAnswer!=null and ''!=wrongAnswer">
+				wrong_answer,
+			</if>
+            <if test="fkExaminationResult!=null">
+				fk_examination_result,
+			</if>
+            <if test="fkQuestion!=null">
+				fk_question,
+			</if>
+            <if test="delFlag!=null">
+				del_flag,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="isRight!=null">
+				#{isRight},
+			</if>
+            <if test="wrongAnswer!=null and ''!=wrongAnswer">
+				#{wrongAnswer},
+			</if>
+            <if test="fkExaminationResult!=null">
+				#{fkExaminationResult},
+			</if>
+            <if test="fkQuestion!=null">
+				#{fkQuestion},
+			</if>
+            <if test="delFlag!=null">
+				#{delFlag},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateExaminationResulquestion" parameterType="ExaminationResulquestionVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="isRight!=null">
+				is_right = #{isRight},
+			</if>
+            <if test="wrongAnswer!=null and ''!=wrongAnswer">
+				wrong_answer = #{wrongAnswer},
+			</if>
+            <if test="fkExaminationResult!=null">
+				fk_examination_result = #{fkExaminationResult},
+			</if>
+            <if test="fkQuestion!=null">
+				fk_question = #{fkQuestion},
+			</if>
+            <if test="delFlag!=null">
+				del_flag = #{delFlag},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailExaminationResulquestion" resultMap="examinationResulquestionMapper" parameterType="ExaminationResulquestionVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listExaminationResulquestion" resultMap="examinationResulquestionMapper" parameterType="ExaminationResulquestionVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listExaminationResulquestionPage" resultMap="examinationResulquestionMapper" parameterType="ExaminationResulquestionVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countExaminationResulquestion" resultType="java.lang.Integer" parameterType="ExaminationResulquestionVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteExaminationResulquestion" parameterType="ExaminationResulquestionVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+</mapper>

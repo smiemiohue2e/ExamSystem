@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.ExamQuestionMapper">
+
+	<resultMap id="examQuestionMapper" type="ExamQuestionDO">
+        <result property="id" column="id"/>
+        <result property="fkExam" column="fk_exam"/>
+        <result property="fkQuestion" column="fk_question"/>
+        <result property="fkQtype" column="fk_qtype"/>
+        <result property="delFlag" column="del_flag"/>
+	</resultMap>
+
+    <sql id="_table">
+        exam_question
+	</sql>
+
+	<sql id="_fields">
+		id,fk_exam,fk_question,fk_qtype,del_flag
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="fkExam!=null">
+				AND fk_exam = #{fkExam}
+			</if>
+            <if test="fkQuestion!=null">
+				AND fk_question = #{fkQuestion}
+			</if>
+            <if test="fkQtype!=null">
+				AND fk_qtype = #{fkQtype}
+			</if>
+            <if test="delFlag!=null">
+				AND del_flag = #{delFlag}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addExamQuestion" parameterType="ExamQuestionVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="fkExam!=null">
+				fk_exam,
+			</if>
+            <if test="fkQuestion!=null">
+				fk_question,
+			</if>
+            <if test="fkQtype!=null">
+				fk_qtype,
+			</if>
+            <if test="delFlag!=null">
+				del_flag,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="fkExam!=null">
+				#{fkExam},
+			</if>
+            <if test="fkQuestion!=null">
+				#{fkQuestion},
+			</if>
+            <if test="fkQtype!=null">
+				#{fkQtype},
+			</if>
+            <if test="delFlag!=null">
+				#{delFlag},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateExamQuestion" parameterType="ExamQuestionVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="fkExam!=null">
+				fk_exam = #{fkExam},
+			</if>
+            <if test="fkQuestion!=null">
+				fk_question = #{fkQuestion},
+			</if>
+            <if test="fkQtype!=null">
+				fk_qtype = #{fkQtype},
+			</if>
+            <if test="delFlag!=null">
+				del_flag = #{delFlag},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailExamQuestion" resultMap="examQuestionMapper" parameterType="ExamQuestionVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listExamQuestion" resultMap="examQuestionMapper" parameterType="ExamQuestionVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listExamQuestionPage" resultMap="examQuestionMapper" parameterType="ExamQuestionVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countExamQuestion" resultType="java.lang.Integer" parameterType="ExamQuestionVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteExamQuestion" parameterType="ExamQuestionVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+    <select id="listExamQuestionByExam" parameterType="QuestionManageQuery" resultType="QuestionManageVO">
+        select * from
+        <trim prefix="(" suffix=")" suffixOverrides="UNION All">
+            <if test="choiceIDs!=null and choiceIDs.size()!=0">
+            select qc.id,qc.question,qc.type,qc.score from question_choice qc where qc.id in
+                <foreach collection="choiceIDs" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            UNION All
+            </if>
+            <if test="judgeIDs!=null and judgeIDs.size()!=0">
+            select qj.id,qj.question,qj.type,qj.score from question_judge qj where qj.id in
+                <foreach collection="judgeIDs" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </trim>
+         as tmp limit #{startRecord},#{pageSize}
+    </select>
+
+</mapper>

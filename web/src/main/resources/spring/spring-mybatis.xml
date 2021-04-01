@@ -45,6 +45,15 @@
                 <value>classpath*:mapper/*.xml</value>
             </list>
         </property>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <value></value>
+                    </property>
+                </bean>
+            </array>
+        </property>
     </bean>
 
     <!--配置mapper扫描-->

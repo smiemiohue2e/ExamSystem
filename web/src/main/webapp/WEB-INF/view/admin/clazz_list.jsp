@@ -41,7 +41,12 @@
                                 <select class="form-control" name="grade" onchange="changeMajor(this)">
                                     <option value="0">年级...</option>
                                     <c:forEach items="${grades}" var="grade">
-                                        <option value="${grade.id}">${grade.grade}</option>
+                                        <c:if test="${grade.id==query.fkGrade}">
+                                        <option value="${grade.id}" selected>${grade.grade}</option>
+                                        </c:if>
+                                        <c:if test="${grade.id!=query.fkGrade}">
+                                            <option value="${grade.id}">${grade.grade}</option>
+                                        </c:if>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -50,6 +55,14 @@
                                 <label class="control-label">专业名：</label>
                                 <select class="form-control" id="major_select" name="major">
                                     <option value="0">专业...</option>
+                                    <c:forEach items="${majors}" var="major">
+                                        <c:if test="${major.id==query.fkMajor}">
+                                            <option value="${major.id}" selected>${major.name}</option>
+                                        </c:if>
+                                        <c:if test="${major.id!=query.fkMajor}">
+                                            <option value="${major.id}">${major.name}</option>
+                                        </c:if>
+                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="col-lg-3 form-group">
@@ -76,6 +89,8 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <c:choose>
+                    <c:when test="${pageBean.list!=null&&pageBean.list.size()>0}">
                     <c:forEach items="${pageBean.list}" var="clazz">
                         <tr>
                             <td>${clazz.id}</td>
@@ -87,6 +102,15 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <td>暂无数据</td>
+                        <td>暂无数据</td>
+                        <td>暂无数据</td>
+                        <td>暂无数据</td>
+                        <td>暂无数据</td>
+                    </c:otherwise>
+                    </c:choose>
                     </tbody>
                 </table>
                 <div class="pull-right">

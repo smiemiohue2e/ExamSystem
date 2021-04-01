@@ -28,7 +28,14 @@ public class ClassVO extends Query implements Serializable {
 
     private Integer delFlag;
 
-    public Integer getId() {
+	public ClassVO() {
+	}
+
+	public ClassVO(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getId() {
 		return id;
 	}
     public void setId(Integer id) {
@@ -58,4 +65,7 @@ public class ClassVO extends Query implements Serializable {
     public void setDelFlag(Integer delFlag) {
 		this.delFlag = delFlag;
 	}
+	/*public String getSortByParams(){
+		return null;
+	}*/
 }

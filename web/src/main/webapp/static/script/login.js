@@ -47,7 +47,7 @@ function _checkVerify(element, error, message) {
             if (json.code == 200) {
                 hasSuccess = true;
             } else {
-                error.innerHTML = message;
+                error.innerHTML = msg;
             }
         }
     });

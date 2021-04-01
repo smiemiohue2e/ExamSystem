@@ -65,15 +65,24 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${pageBean.list}" var="grade">
-                        <tr>
-                            <td>${grade.id}</td>
-                            <td>${grade.grade}</td>
-                            <td>
-                                <button class="btn btn-danger btn-xs" onclick="deleteGrade(this);">删除</button>
-                            </td>
-                        </tr>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${pageBean.list!=null&&pageBean.list.size()>0}">
+                            <c:forEach items="${pageBean.list}" var="grade">
+                                <tr>
+                                    <td>${grade.id}</td>
+                                    <td>${grade.grade}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-xs" onclick="deleteGrade(this);">删除</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                        </c:otherwise>
+                    </c:choose>
                     </tbody>
                 </table>
                 <%--分页--%>

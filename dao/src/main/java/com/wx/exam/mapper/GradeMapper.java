@@ -1,38 +1,25 @@
 package com.wx.exam.mapper;
 
-import com.wx.exam.pojo.Grade;
-import com.wx.exam.pojo.GradeExample;
-import com.wx.exam.pojo.vo.GradeQuery;
-import org.apache.ibatis.annotations.Param;
+
+import com.wx.exam.pojo.data.GradeDO;
+import com.wx.exam.pojo.vo.GradeVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/** 
+ * <br/>
+ * Created by weidong on 2018/07/18
+ */
+@Repository
 public interface GradeMapper {
-    int countByExample(GradeExample example);
-
-    int deleteByExample(GradeExample example);
-
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(Grade record);
-
-    int insertSelective(Grade record);
-
-    List<Grade> selectByExample(GradeExample example);
-
-    Grade selectByPrimaryKey(Integer id);
-
-    int updateByExampleSelective(@Param("record") Grade record, @Param("example") GradeExample example);
-
-    int updateByExample(@Param("record") Grade record, @Param("example") GradeExample example);
-
-    int updateByPrimaryKeySelective(Grade record);
-
-    int updateByPrimaryKey(Grade record);
-
-    Grade  findGrade(Grade grade);
-
-    int deleteGrade(Integer id);
-
-    List<Grade> pageSearch(Integer search);
+    Integer addGrade(GradeVO gradeVO);
+    Integer updateGrade(GradeVO gradeVO);
+    GradeDO findDetailGrade(GradeVO gradeVO);
+    List<GradeDO> listGrade(GradeVO gradeVO);
+    List<GradeDO> listGradePage(GradeVO gradeVO);
+    Integer countGrade(GradeVO gradeVO);
+    Integer deleteGrade(GradeVO gradeVO);
+    //自定义分页查询
+    List<GradeDO> grades(GradeVO gradeVO);
 }

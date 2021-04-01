@@ -65,4 +65,7 @@ public class ClassListVO {
     public void setMajor(MajorDO major) {
         this.major = major;
     }
+    public String getSortByParams(){
+        return null;
+    }
 }

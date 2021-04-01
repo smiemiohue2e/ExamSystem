@@ -84,11 +84,13 @@ function sendDeleteRequest(id) {
         "dataType": "json",
         "async": false,
         "success": function (json) {
-            if (json.result == 0) {
-                Tips.showError(json.message);
-            } else if (json.result == 1) {
-                Tips.showSuccess(json.message);
-                window.location.reload();
+            if (json.code == 2) {
+                Tips.showError(json.msg);
+            } else  {
+                Tips.showSuccess(json.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
             }
         }
     });
@@ -146,12 +148,15 @@ function addTeacher(form) {
             "async": false,
             "dataType": "json",
             "success": function (json) {
-                if (json.result == 0) {
-                    error.innerHTML = json.message;
+                if (json.code == 2) {
+                    error.innerHTML = json.msg;
                 } else {
                     toggleTeacherAdd(false);
                     _resetTeacher(form.name, error);
-                    Tips.showSuccess(json.message);
+                    Tips.showSuccess(json.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
                 }
             }
         });
@@ -190,17 +195,20 @@ function editTeacher(form) {
     var result = _checkTeacher(form, error);
     if (result.result) {
         $.ajax({
-            "url": "admin/teacher/edit",
+            "url": "/admin/teacher/edit",
             "data": "id=" + result.id + "&name=" + result.name,
             "async": false,
             "dataType": "json",
             "success": function (json) {
-                if (json.result == "0") {
-                    Tips.showError(json.message);
-                } else if (json.result == "1") {
+                if (json.code==2) {
+                    Tips.showError(json.msg);
+                } else  {
                     toggleTeacherEdit(false);
                     _resetTeacher(form.name, error);
-                    Tips.showSuccess(json.message);
+                    Tips.showSuccess(json.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
                 }
             }
         });
@@ -251,9 +259,9 @@ function search(form) {
  * @param  {String} tipsOption  [提示选项，比如<option value='0'>年级...</option>, 可选]
  */
 function _handleJSON(json, container, callback, tipsOption) {
-    if (json.result == "0") {
-        Tips.showError(json.message);
-    } else if (json.result == "1") {
+    if (json.code == 2) {
+        Tips.showError(json.msg);
+    } else {
         container.empty();
         var options = new Array();
         if (tipsOption != undefined) {
@@ -274,7 +282,7 @@ function _handleJSON(json, container, callback, tipsOption) {
  */
 function _loadTeachClazz($clazzList, tid) {
     $.ajax({
-        "url": "admin/teacher/clazz/list",
+        "url": "admin/clazz/listByTeacher",
         "data": "tid=" + tid,
         "async": false,
         "dataType": "json",
@@ -295,7 +303,7 @@ function _loadTeachClazz($clazzList, tid) {
  */
 function _loadGrade() {
     $.ajax({
-        "url": "grade/ajax",
+        "url": "/grade/ajax",
         "async": false,
         "dataType": "json",
         "success": function (json) {
@@ -322,9 +330,10 @@ function toggleClazzEdit(isShow, btn) {
         //加载已教班级
         var tid = $(btn).parent().prev().prev().html();
         variables.currentTeacher = tid;
-        _loadTeachClazz($clazzList, tid);
-        //加载年级
+        //加载年级下拉列表
         _loadGrade();
+        //得到老师教的班级
+        _loadTeachClazz($clazzList, tid);
     } else {
         _resetClazzEdit();
         //clazzEdit.style.display = "none";
@@ -511,16 +520,19 @@ function save() {
         clazzIds.push(this.value);
     });
     $.ajax({
-        "url": "admin/teacher/clazz/save",
+        "url": "admin/teacher/addClass",
         "data": "ids=" + clazzIds.join() + "&tid=" + variables.currentTeacher,
         "async": false,
         "dataType": "json",
         "success": function (json) {
-            if (json.result == "0") {
-                Tips.showError(json.message);
-            } else if (json.result == "1") {
+            if (json.code == 2) {
+                Tips.showError(json.msg);
+            } else {
                 toggleClazzEdit(false);
-                Tips.showSuccess(json.message);
+                Tips.showSuccess(json.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
             }
         }
     });

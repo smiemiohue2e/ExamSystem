@@ -19,11 +19,13 @@ function sendDeleteRequest(id) {
         "dataType": "json",
         "async": false,
         "success": function (json) {
-            if (json.result == 0) {
-                Tips.showError(json.message);
-            } else if (json.result == 1) {
-                Tips.showSuccess(json.message);
-                window.location.reload();
+            if (json.code == 2) {
+                Tips.showError(json.msg);
+            } else if (json.code == 200) {
+                Tips.showSuccess(json.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
             }
         }
     });
@@ -87,13 +89,11 @@ function _checkStudent(form, error, isAdd) {
             "async": false,
             "dataType": "json",
             "success": function (json) {
-                if (json.result == "0") {
-                    error.innerHTML = json.message;
-                } else if (json.result == "1") {
-                    if (json.exist == "1") {
-                        error.innerHTML = "此学号已存在";
-                        flag = false;
-                    }
+                if (json.code == 200) {
+
+                } else {
+                    error.innerHTML = "此学号已存在";
+                    flag = false;
                 }
             }
         });
@@ -114,13 +114,15 @@ function addStudent(form) {
             "async": false,
             "dataType": "json",
             "success": function (json) {
-                if (json.result == 0) {
-                    error.innerHTML = json.message;
+                if (json.code == 2) {
+                    error.innerHTML = json.msg;
                 } else {
                     toggleStudentAdd(false);
                     _resetStudent(form.student, error);
-                    Tips.showSuccess(json.message);
-                    window.location.reload();
+                    Tips.showSuccess(json.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
                 }
             }
         });
@@ -136,18 +138,21 @@ function editStudent(form) {
     var error = document.getElementById("student_edit_error");
     if (_checkStudent(form, error, false)) {
         $.ajax({
-            "url": "admin/student/edit",
-            "data": "name=" + form.student.value + "&id=" + form.id.value + "&clazz=" + $("#clazz_select_edit").val(),
+            "url": "/admin/student/edit",
+            "data": "name=" + form.student.value + "&id=" + form.id.value + "&clazz=" + $("#clazz_select_edit").val()+"&studentId="+$("#studentId").val(),
             "async": false,
             "dataType": "json",
             "success": function (json) {
-                if (json.result == 0) {
-                    error.innerHTML = json.message;
+                if (json.code == 2) {
+                    error.innerHTML = json.msg;
                 } else {
                     toggleStudentEdit(false);
                     _resetStudent(form.student, error);
-                    Tips.showSuccess(json.message);
-                    window.location.href = "admin/student/list";
+                    Tips.showSuccess(json.msg);
+                    /*window.location.href = "admin/student/list";*/
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
                 }
             }
         });
@@ -187,7 +192,7 @@ function _loadGrades(callback, isAdd) {
         "dataType": "json",
         "async": false,
         "success": function (json) {
-            if (json.result == "1") {
+            if (json.code == 200) {
                 var $gradeSelect = isAdd ? $("#grade_select_add") : $("#grade_select_edit");
                 $gradeSelect.empty();
                 var options = new Array();
@@ -219,9 +224,9 @@ function _loadMajor(grade, isAdd, callback) {
         "dataType": "json",
         "async": false,
         "success": function (json) {
-            if (json.result == "0") {
+            if (json.code == 2) {
                 Tips.showError(json.message);
-            } else if (json.result == "1") {
+            } else if (json.code==200) {
                 $majorSelect.empty();
                 //专业数组
                 var options = new Array();
@@ -274,9 +279,9 @@ function _loadClazz(majorId, isAdd, callback) {
         "async": false,
         "dataType": "json",
         "success": function (json) {
-            if (json.result == "0") {
+            if (json.code == 2) {
                 Tips.showError(json.message);
-            } else if (json.result == "1") {
+            } else if (json.code==200) {
                 $clazzSelect.empty();
                 for (var i = 0; i < json.data.length; i++) {
                     options.push(callback(json.data[i]));

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * [[删除单个元素]]
  * @param {[[DOM]]} btn [[触发此函数的按钮]]
  */
@@ -19,11 +19,13 @@ function sendDeleteRequest(id) {
         "dataType": "json",
         "async": false,
         "success": function (json) {
-            if (json.result == 0) {
-                Tips.showError(json.message);
-            } else if (json.result == 1) {
-                Tips.showSuccess(json.message);
-                window.location.reload();
+            if (json.code == 2) {
+                Tips.showError(json.msg);
+            } else  {
+                Tips.showSuccess(json.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
             }
         }
     });

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.ExaminationResultMapper">
+
+	<resultMap id="examinationResultMapper" type="ExaminationResultDO">
+        <result property="id" column="id"/>
+        <result property="point" column="point"/>
+        <result property="time" column="time"/>
+        <result property="examTitle" column="exam_title"/>
+        <result property="fkExam" column="fk_exam"/>
+        <result property="fkStudent" column="fk_student"/>
+        <result property="delFlag" column="del_flag"/>
+	</resultMap>
+
+    <sql id="_table">
+        examination_result
+	</sql>
+
+	<sql id="_fields">
+		id,`point`,`time`,exam_title,fk_exam,fk_student,del_flag
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="point!=null">
+				AND `point` = #{point}
+			</if>
+            <if test="time!=null and ''!=time">
+				<![CDATA[AND `time` >= #{dynamicFields_startTime}]]>
+			</if>
+            <if test="time!=null and ''!=time">
+				<![CDATA[AND `time` < #{dynamicFields_endTime}]]>
+			</if>
+            <if test="examTitle!=null and ''!=examTitle">
+				AND exam_title = #{examTitle}
+			</if>
+            <if test="fkExam!=null">
+				AND fk_exam = #{fkExam}
+			</if>
+            <if test="fkStudent!=null and ''!=fkStudent">
+				AND fk_student = #{fkStudent}
+			</if>
+            <if test="delFlag!=null">
+				AND del_flag = #{delFlag}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addExaminationResult" parameterType="ExaminationResultVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="point!=null">
+				`point`,
+			</if>
+            <if test="time!=null and ''!=time">
+				`time`,
+			</if>
+            <if test="examTitle!=null and ''!=examTitle">
+				exam_title,
+			</if>
+            <if test="fkExam!=null">
+				fk_exam,
+			</if>
+            <if test="fkStudent!=null and ''!=fkStudent">
+				fk_student,
+			</if>
+            <if test="delFlag!=null">
+				del_flag,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="point!=null">
+				#{point},
+			</if>
+            <if test="time!=null and ''!=time">
+				#{time},
+			</if>
+            <if test="examTitle!=null and ''!=examTitle">
+				#{examTitle},
+			</if>
+            <if test="fkExam!=null">
+				#{fkExam},
+			</if>
+            <if test="fkStudent!=null and ''!=fkStudent">
+				#{fkStudent},
+			</if>
+            <if test="delFlag!=null">
+				#{delFlag},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateExaminationResult" parameterType="ExaminationResultVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="point!=null">
+				`point` = #{point},
+			</if>
+            <if test="time!=null and ''!=time">
+				`time` = #{time},
+			</if>
+            <if test="examTitle!=null and ''!=examTitle">
+				exam_title = #{examTitle},
+			</if>
+            <if test="fkExam!=null">
+				fk_exam = #{fkExam},
+			</if>
+            <if test="fkStudent!=null and ''!=fkStudent">
+				fk_student = #{fkStudent},
+			</if>
+            <if test="delFlag!=null">
+				del_flag = #{delFlag},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailExaminationResult" resultMap="examinationResultMapper" parameterType="ExaminationResultVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listExaminationResult" resultMap="examinationResultMapper" parameterType="ExaminationResultVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listExaminationResultPage" resultMap="examinationResultMapper" parameterType="ExaminationResultVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countExaminationResult" resultType="java.lang.Integer" parameterType="ExaminationResultVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteExaminationResult" parameterType="ExaminationResultVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+</mapper>

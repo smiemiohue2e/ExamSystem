@@ -216,8 +216,7 @@ var QuestionHelper = {
     },
     saveQuestion: function () {
         //支持单选和多选
-        var answer, i, l,
-            $checkeds = $("#question-answer-container input:checked");
+        var answer, i, l, $checkeds = $("#question-answer-container input:checked");
         if (QuestionHelper.questionType === "MULTI") {
             if ($checkeds.length < 2) {
                 $("#question-error").html("请选择至少两个答案");
@@ -269,9 +268,10 @@ var QuestionHelper = {
             }
             //提交
             $.post("teacher/question/save", data, function (data) {
-                if (data.result === "0") {
+                if (data.code != 200) {
                     Tips.showError("保存失败，请稍候再试");
-                } else if (data.result === "1") {
+                } else {
+                    $("#question-modal").modal("hide");
                     Tips.showSuccess("保存成功");
                     setTimeout(function () {
                         window.location.reload();

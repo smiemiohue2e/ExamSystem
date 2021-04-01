@@ -1,38 +1,33 @@
 package com.wx.exam.mapper;
 
-import com.wx.exam.pojo.Major;
-import com.wx.exam.pojo.MajorExample;
-import com.wx.exam.pojo.vo.MajorQuery;
-import org.apache.ibatis.annotations.Param;
+
+import com.wx.exam.pojo.data.MajorDO;
+import com.wx.exam.pojo.vo.GradeVO;
+import com.wx.exam.pojo.vo.MajorVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/** 
+ * <br/>
+ * Created by weidong on 2018/07/18
+ */
+@Repository
 public interface MajorMapper {
-    int countByExample(MajorExample example);
 
-    int deleteByExample(MajorExample example);
+    Integer addMajor(MajorVO majorVO);
 
-    int deleteByPrimaryKey(Integer id);
+    Integer updateMajor(MajorVO majorVO);
 
-    int insert(Major record);
+    MajorDO findDetailMajor(MajorVO majorVO);
 
-    int insertSelective(Major record);
+    List<MajorDO> listMajor(MajorVO majorVO);
 
-    List<Major> selectByExample(MajorExample example);
+    List<MajorDO> listMajorPage(MajorVO majorVO);
 
-    Major selectByPrimaryKey(Integer id);
+    Integer countMajor(MajorVO majorVO);
 
-    int updateByExampleSelective(@Param("record") Major record, @Param("example") MajorExample example);
+    Integer deleteMajor(MajorVO majorVO);
 
-    int updateByExample(@Param("record") Major record, @Param("example") MajorExample example);
-
-    int updateByPrimaryKeySelective(Major record);
-
-    int updateByPrimaryKey(Major record);
-
-    List<Major> pageSearch(String search);
-
-    int addMajor(Major major);
-
-    void updateMajor(Major major);
+    List<MajorDO> listMajorByGrade(GradeVO gradeVO);
 }

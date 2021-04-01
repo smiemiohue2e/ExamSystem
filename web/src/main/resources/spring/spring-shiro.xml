@@ -61,7 +61,7 @@
     </bean>
 
     <!--自定义realm-->
-    <bean id="userRealm" class="com.wx.exam.shiro.UserRealm">
+    <bean id="userRealm" class="com.wx.exam.security.shiro.UserRealm">
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
     </bean>
 

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.QuestionJudgeMapper">
+
+	<resultMap id="questionJudgeMapper" type="QuestionJudgeDO">
+        <result property="id" column="id"/>
+        <result property="question" column="question"/>
+        <result property="score" column="score"/>
+        <result property="answer" column="answer"/>
+        <result property="fkTeacher" column="fk_teacher"/>
+        <result property="type" column="type"/>
+        <result property="delFalg" column="del_falg"/>
+	</resultMap>
+
+    <sql id="_table">
+        question_judge
+	</sql>
+
+	<sql id="_fields">
+		id,question,score,answer,fk_teacher,`type`,del_falg
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="question!=null and ''!=question">
+				AND question = #{question}
+			</if>
+            <if test="score!=null">
+				AND score = #{score}
+			</if>
+            <if test="answer!=null and ''!=answer">
+				AND answer = #{answer}
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				AND fk_teacher = #{fkTeacher}
+			</if>
+            <if test="type!=null">
+				AND `type` = #{type}
+			</if>
+            <if test="delFalg!=null">
+				AND del_falg = #{delFalg}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addQuestionJudge" parameterType="QuestionJudgeVO" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="question!=null and ''!=question">
+				question,
+			</if>
+            <if test="score!=null">
+				score,
+			</if>
+            <if test="answer!=null and ''!=answer">
+				answer,
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher,
+			</if>
+            <if test="type!=null">
+				`type`,
+			</if>
+            <if test="delFalg!=null">
+				del_falg,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="question!=null and ''!=question">
+				#{question},
+			</if>
+            <if test="score!=null">
+				#{score},
+			</if>
+            <if test="answer!=null and ''!=answer">
+				#{answer},
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				#{fkTeacher},
+			</if>
+            <if test="type!=null">
+				#{type},
+			</if>
+            <if test="delFalg!=null">
+				#{delFalg},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateQuestionJudge" parameterType="QuestionJudgeVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="question!=null and ''!=question">
+				question = #{question},
+			</if>
+            <if test="score!=null">
+				score = #{score},
+			</if>
+            <if test="answer!=null and ''!=answer">
+				answer = #{answer},
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher = #{fkTeacher},
+			</if>
+            <if test="type!=null">
+				`type` = #{type},
+			</if>
+            <if test="delFalg!=null">
+				del_falg = #{delFalg},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailQuestionJudge" resultMap="questionJudgeMapper" parameterType="QuestionJudgeVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listQuestionJudge" resultMap="questionJudgeMapper" parameterType="QuestionJudgeVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listQuestionJudgePage" resultMap="questionJudgeMapper" parameterType="QuestionJudgeVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countQuestionJudge" resultType="java.lang.Integer" parameterType="QuestionJudgeVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteQuestionJudge" parameterType="QuestionJudgeVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+    <select id="listQuestionJudgeByIdIn" parameterType="list" resultType="QuestionJudgeDO">
+        select * from question_judge where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

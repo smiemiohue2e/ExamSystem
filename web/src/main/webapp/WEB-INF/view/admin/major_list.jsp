@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
@@ -42,7 +42,7 @@
                               onsubmit="return search(this);">
                             <div class="col-lg-4 form-group">
                                 <label class="control-label">专业名</label>
-                                <input class="form-control" name="search" type="text">
+                                <input value="${search }" class="form-control" name="search" type="text">
                             </div>
                             <div class="col-lg-4 form-group">
                                 <button type="submit" class="btn btn-primary">搜索</button>
@@ -63,7 +63,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${pageBean.list}" var="major">
+                    <c:choose>
+                        <c:when test="${pageBean.list!=null&&pageBean.list.size()>0}">
+                        <c:forEach items="${pageBean.list}" var="major">
                         <tr>
                             <td>${major.id}</td>
                             <td>${major.name}</td>
@@ -74,6 +76,13 @@
                             </td>
                         </tr>
                     </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                            <td>暂无数据</td>
+                        </c:otherwise>
+                    </c:choose>
                     </tbody>
                 </table>
                 <div class="pull-right">

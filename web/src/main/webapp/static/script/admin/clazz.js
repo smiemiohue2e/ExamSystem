@@ -15,15 +15,17 @@ function deleteClazz(btn) {
  */
 function sendDeleteRequest(id) {
 	$.ajax({
-		"url" : "admin/clazz/delete/" + id,
+		"url" : "/admin/clazz/delete/" + id,
 		"dataType" : "json",
 		"async" : false,
 		"success" : function(json) {
-			if(json.result == 0) {
-				Tips.showError(json.message);
-			}else if(json.result == 1) {
-				Tips.showSuccess(json.message);
-				window.location.reload();
+			if(json.code == 2) {
+				Tips.showError(json.msg);
+			}else if(json.code == 200) {
+				Tips.showSuccess(json.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
 			}
 		}
 	});
@@ -72,7 +74,7 @@ function changeMajor(gradeSelect) {
     if (value != 0) {
     	//发起ajax请求
         $.ajax({
-            "url": "major/ajax",
+            "url": "/major/ajax",
             "async": false,
 			"data":"grade="+value,
 			"dataType":"json",
@@ -104,13 +106,15 @@ function addClazz(form) {
             "async": false,
             "dataType": "json",
             "success": function(json) {
-                if(json.result == 0) {
-                    error.innerHTML = json.message;
+                if(json.code == 2) {
+                    error.innerHTML = json.msg;
                 }else {
                     toggleClazzAdd(false);
                     _resetClazz(form.clazz, error);
-                    Tips.showSuccess(json.message);
-                    window.location.reload();
+                    Tips.showSuccess(json.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
                 }
             }
         });

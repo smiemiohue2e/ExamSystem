@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: weidong
@@ -8,37 +9,37 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="col-md-2 bootstrap-admin-col-left">
     <ul class="nav navbar-collapse collapse bootstrap-admin-navbar-side">
-        <li>
+        <li <c:if test="${function == 1}">class="active"</c:if> >
             <a href="${pageContext.request.contextPath}/teacher/index">
                 <i class="glyphicon glyphicon-chevron-right"></i> 主页
             </a>
         </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/teacher/exam/list">
+        <li <c:if test="${function == 2}">class="active"</c:if> >
+        <a href="${pageContext.request.contextPath}/teacher/exam/list">
                 <i class="glyphicon glyphicon-chevron-right"></i> 试卷列表
             </a>
         </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/teacher/exam/add">
+        <li <c:if test="${function == 3}">class="active"</c:if> >
+        <a href="${pageContext.request.contextPath}/teacher/exam/add">
                 <i class="glyphicon glyphicon-chevron-right"></i> 试卷添加
             </a>
         </li>
-        <li>
+        <li <c:if test="${function == 4}">class="active"</c:if> >
             <a href="${pageContext.request.contextPath}/teacher/question/singles">
                 <i class="glyphicon glyphicon-chevron-right"></i> 单选题
             </a>
         </li>
-        <li>
+        <li <c:if test="${function == 5}">class="active"</c:if> >
             <a href="${pageContext.request.contextPath}/teacher/question/multis">
                 <i class="glyphicon glyphicon-chevron-right"></i> 多选题
             </a>
         </li>
-        <li>
+        <li <c:if test="${function == 6}">class="active"</c:if> >
             <a href="${pageContext.request.contextPath}/teacher/question/judges">
                 <i class="glyphicon glyphicon-chevron-right"></i> 判断题
             </a>
         </li>
-        <li>
+        <li <c:if test="${function == 7}">class="active"</c:if> >
             <a href="${pageContext.request.contextPath}/">
                 <i class="glyphicon glyphicon-chevron-right"></i> 关于我们
             </a>

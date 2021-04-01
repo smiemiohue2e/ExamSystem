@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.ExamClassMapper">
+
+	<resultMap id="examClassMapper" type="ExamClassDO">
+        <result property="id" column="id"/>
+        <result property="fkExam" column="fk_exam"/>
+        <result property="fkClass" column="fk_class"/>
+        <result property="delFlag" column="del_flag"/>
+	</resultMap>
+
+    <sql id="_table">
+        exam_class
+	</sql>
+
+	<sql id="_fields">
+		id,fk_exam,fk_class,del_flag
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="fkExam!=null">
+				AND fk_exam = #{fkExam}
+			</if>
+            <if test="fkClass!=null">
+				AND fk_class = #{fkClass}
+			</if>
+            <if test="delFlag!=null">
+				AND del_flag = #{delFlag}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addExamClass" parameterType="ExamClassVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="fkExam!=null">
+				fk_exam,
+			</if>
+            <if test="fkClass!=null">
+				fk_class,
+			</if>
+            <if test="delFlag!=null">
+				del_flag,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="fkExam!=null">
+				#{fkExam},
+			</if>
+            <if test="fkClass!=null">
+				#{fkClass},
+			</if>
+            <if test="delFlag!=null">
+				#{delFlag},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateExamClass" parameterType="ExamClassVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="fkExam!=null">
+				fk_exam = #{fkExam},
+			</if>
+            <if test="fkClass!=null">
+				fk_class = #{fkClass},
+			</if>
+            <if test="delFlag!=null">
+				del_flag = #{delFlag},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailExamClass" resultMap="examClassMapper" parameterType="ExamClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listExamClass" resultMap="examClassMapper" parameterType="ExamClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listExamClassPage" resultMap="examClassMapper" parameterType="ExamClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countExamClass" resultType="java.lang.Integer" parameterType="ExamClassVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteExamClass" parameterType="integer">
+        DELETE FROM <include refid="_table"/>
+       <!-- <include refid="_primaryKey_condition"/>-->
+        where fk_exam=#{examId}
+    </delete>
+
+</mapper>

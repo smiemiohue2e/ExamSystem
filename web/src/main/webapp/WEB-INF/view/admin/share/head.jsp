@@ -16,7 +16,7 @@
 							<a type="button" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
 								<i class="glyphicon glyphicon-user"></i>
 								欢迎您，${sessionScope.manager.name}
-								<c:if test="${!sessionScope.manager.modified}">
+								<c:if test="${sessionScope.manager.modified==0}">
 									<!-- 如果是初始密码，提示修改密码 -->
 									<span style="color: red;">当前初是始密码，请尽快修改</span>
 								</c:if>

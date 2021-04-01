@@ -67,7 +67,6 @@
             <div class="row">
                 <div class="col-lg-12" id="question-list">
                     <table class="table table-hover table-bordered">
-
                     <c:choose>
                             <c:when test="${type == 'JUDGE'}">
                                 <thead>
@@ -109,6 +108,7 @@
                                     <th width="20%">操作</th>
                                 </tr>
                                 </thead>
+
                                 <tbody>
                                 <c:forEach items="${pageBean.list}" var="question">
                                     <tr>
@@ -138,7 +138,7 @@
                         <script type="text/javascript">
                             function page(pageCode) {
                                 var search = document.getElementById("search-content").value;
-                                window.location.href = "${pageContext.request.contextPath}/teacher/question/singles/"
+                                window.location.href = "${pageContext.request.contextPath}/teacher/question/${type == 'SINGLE' ? 'singles' : (type == 'MULTI' ? 'multis' : 'judges')}/"
                                     + pageCode + "?search=" + search;
                             }
                         </script>
@@ -150,7 +150,7 @@
     </div>
 </div>
 <!-- 题目编辑 -->
-<div class="modal fade" id="question-modal" tabindex="-1" role="dialog">
+<div class="modal fade form-horizontal" id="question-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -224,7 +224,7 @@
                                     <input type="checkbox" value="3"/>D
                                 </c:when>
                                 <c:otherwise>
-                                    <input type="radio" name="anser" value="0"/>对
+                                    <input type="radio" name="answer" value="0"/>对
                                     <input type="radio" name="answer" value="1"/>错
                                 </c:otherwise>
                             </c:choose>

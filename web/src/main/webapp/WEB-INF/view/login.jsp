@@ -19,7 +19,7 @@
 </head>
 <body>
     <!--中间登录-->
-    <form action="login/do" method="post" onsubmit="return check(this);">
+    <form action="/login/do" method="post" onsubmit="return check(this);">
             <div class="box">
                 <h2>登录</h2>
                 <div id="error_box"></div>

@@ -20,7 +20,7 @@
     <!--<aop:aspectj-autoproxy proxy-target-class="true"/>-->
 
     <!--加载配置文件 并指定id-->
-    <utils:properties id="properties" location="classpath:config.properties" />
+    <!--<utils:properties id="properties" location="classpath:config.properties" />-->
 
     <!--配置kaptcha验证码-->
     <bean id="kaptcha" class="com.google.code.kaptcha.impl.DefaultKaptcha">

@@ -1,4 +1,4 @@
-//试卷列表操作
+﻿//试卷列表操作
 $(function () {
     ExamList.initListeners();
 });
@@ -61,6 +61,9 @@ var ExamList = {
         $("#close-edit-btn").click(ExamList.closeExamEdit);
         //试卷保存
         $("#exam-save-btn").click(ExamList.saveExam);
+
+        //试卷保存
+        $("#addSubject").click(ExamList.addExam);
     },
     //显示适用的班级
     //button 触发事件的dom对象
@@ -70,10 +73,24 @@ var ExamList = {
         var id = $(button).parent().prev().prev().html();
         ExamList.examId = id;
         $clazzShow.show();
+
+        $.post("grade/ajax", null, function (data) {
+            if (data.code != 200) {
+                Tips.showError("年级加载失败，请稍后再试");
+            } else {
+                var optionsStr = "<option value='0'>年级...</option>";
+                $.each(data.data, function (index, element) {
+                    optionsStr += "<option value='" + element.id + "'>" + element.grade + "级</option>";
+                });
+                ExamList.$gradeOptions = $(optionsStr);
+                ExamList.$gradeOptions.appendTo($("#grade_select").empty());
+            }
+        }, "json");
+
         $.post("teacher/clazz/list", "examId=" + id, function (data) {
-            if (data.result === "0") {
-                Tips.showError(result.message);
-            } else if (data.result === "1") {
+            if (data.code !== 200) {
+                Tips.showError(data.msg);
+            } else {
                 //渲染班级到clazz-show
                 var classesStr = "";
                 $.each(data.data, function (index, element) {
@@ -84,31 +101,25 @@ var ExamList = {
                 $(classesStr).appendTo($("#exam-list-container").empty());
             }
         }, "json");
-        $.post("grade/ajax", null, function (data) {
-            if (data.result === "0") {
-                Tips.showError("年级加载失败，请稍后再试");
-            } else if (data.result === "1") {
-                var optionsStr = "<option value='0'>年级...</option>";
-                $.each(data.data, function (index, element) {
-                    optionsStr += "<option value='" + element.id + "'>" + element.grade + "级</option>";
-                });
-                ExamList.$gradeOptions = $(optionsStr);
-                ExamList.$gradeOptions.appendTo($("#grade_select").empty());
-            }
-        }, "json");
+
     },
     //关闭班级
     closeClass: function () {
         $("#clazz-show").hide();
         ExamList.resetSelect();
+        ExamList.selectedClazzs.splice(0,ExamList.selectedClazzs.length);//清空数组
+
     },
     //保存班级
     saveClass: function () {
         $.post("teacher/clazz/reset", "examId=" + ExamList.examId + "&clazzIds=" + ExamList.selectedClazzs.join(), function (data) {
-            if (data.result === "0") {
+            if (data.code === 2) {
                 Tips.showError("参数非法!");
-            } else if (data.result === "1") {
+            } else {
                 Tips.showSuccess("保存成功!");
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
             }
             ExamList.closeClass();
         }, "json");
@@ -140,9 +151,9 @@ var ExamList = {
             $majorSelect.children("option:gt(0)").remove();
         } else {
             $.post("major/ajax", "grade=" + selectedGradeId, function (data) {
-                if (data.result === "0") {
+                if (data.code !== 200) {
                     Tips.showError("专业加载失败，请稍后再试");
-                } else if (data.result === "1") {
+                } else {
                     $majorSelect.empty();
                     var optionsStr = "<option value='0'>专业...</option>";
                     $.each(data.data, function (index, element) {
@@ -162,9 +173,9 @@ var ExamList = {
             $clazzSelect.children("option:gt(0)").remove();
         } else {
             $.post("clazz/ajax", "grade=" + selectedGradeId + "&major=" + selectedMajorId, function (data) {
-                if (data.result === "0") {
+                if (data.code !== 200) {
                     Tips.showError("班级加载失败，请稍候重试");
-                } else if (data.result === "1") {
+                } else {
                     $clazzSelect.empty();
                     var optionsStr = "<option value='0'>班级...</option>";
                     $.each(data.data, function (index, element) {
@@ -289,9 +300,9 @@ var ExamList = {
             dataType: "json",
             async: false,
             success: function (data) {
-                if (data.result === "0") {
+                if (data.code !=200) {
                     Tips.showError("参数错误!");
-                } else if (data.result === "1") {
+                }  {
                     Tips.showSuccess("保存成功");
                     setTimeout(function () {
                         window.location.reload();
@@ -346,9 +357,9 @@ var ExamList = {
         }
         //提交请求
         $.post("teacher/exam/update/" + ExamList.examId, "title=" + title + "&limit=" + limit, function (data) {
-            if (data.result === "0") {
+            if (data.code !== 200) {
                 Tips.showError("更新失败，请稍候再试");
-            } else if (data.result === "1") {
+            } else {
                 Tips.showSuccess("更新成功");
                 setTimeout(function () {
                     window.location.reload();
@@ -359,5 +370,21 @@ var ExamList = {
         function getErrorSpan($ele) {
             return $ele.parent().next().children("span");
         }
+    },addExam:function () {
+        var postdata = "title=" + $.trim($("#addSubjectName").val()) + "&timelimit=" + $.trim($("#addSubjectTime").val());
+        $.post("/teacher/exam/add", postdata, function (data) {
+            if (data.code !== 200) {
+                Tips.showError("添加失败，请稍候再试");
+            } else {
+                $("#addModal").modal("hide");
+                Tips.showSuccess("添加成功");
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            }
+        }, "json");
     }
 };
+
+
+

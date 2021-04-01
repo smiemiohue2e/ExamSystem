@@ -1,31 +1,31 @@
 package com.wx.exam.mapper;
 
-import com.wx.exam.pojo.Manager;
-import com.wx.exam.pojo.ManagerExample;
-import org.apache.ibatis.annotations.Param;
+
+import com.wx.exam.pojo.data.ManagerDO;
+import com.wx.exam.pojo.vo.ManagerVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/** 
+ * <br/>
+ * Created by wangxiao on 2018/07/27
+ */
+@Repository
 public interface ManagerMapper {
-    int countByExample(ManagerExample example);
 
-    int deleteByExample(ManagerExample example);
+    Integer addManager(ManagerVO managerVO);
 
-    int deleteByPrimaryKey(Integer id);
+    Integer updateManager(ManagerVO managerVO);
 
-    int insert(Manager record);
+    ManagerDO findDetailManager(ManagerVO managerVO);
 
-    int insertSelective(Manager record);
+    List<ManagerDO> listManager(ManagerVO managerVO);
 
-    List<Manager> selectByExample(ManagerExample example);
+    List<ManagerDO> listManagerPage(ManagerVO managerVO);
 
-    Manager selectByPrimaryKey(Integer id);
+    Integer countManager(ManagerVO managerVO);
 
-    int updateByExampleSelective(@Param("record") Manager record, @Param("example") ManagerExample example);
+    Integer deleteManager(ManagerVO managerVO);
 
-    int updateByExample(@Param("record") Manager record, @Param("example") ManagerExample example);
-
-    int updateByPrimaryKeySelective(Manager record);
-
-    int updateByPrimaryKey(Manager record);
 }

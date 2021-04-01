@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.ExamMapper">
+
+	<resultMap id="examMapper" type="ExamDO">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="timelimit" column="timelimit"/>
+        <result property="endtime" column="endtime"/>
+        <result property="fkStatus" column="fk_status"/>
+        <result property="points" column="points"/>
+        <result property="singlepoints" column="singlepoints"/>
+        <result property="multipoints" column="multipoints"/>
+        <result property="judgepoints" column="judgepoints"/>
+        <result property="fkTeacher" column="fk_teacher"/>
+        <result property="delFlag" column="del_flag"/>
+	</resultMap>
+
+    <sql id="_table">
+        exam
+	</sql>
+
+	<sql id="_fields">
+		id,title,timelimit,endtime,fk_status,points,singlepoints,multipoints,judgepoints,fk_teacher,del_flag
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="title!=null and ''!=title">
+				AND title = #{title}
+			</if>
+            <if test="timelimit!=null">
+				AND timelimit = #{timelimit}
+			</if>
+            <if test="endtime!=null and ''!=endtime">
+				<![CDATA[AND endtime >= #{dynamicFields_startTime}]]>
+			</if>
+            <if test="endtime!=null and ''!=endtime">
+				<![CDATA[AND endtime < #{dynamicFields_endTime}]]>
+			</if>
+            <if test="fkStatus!=null">
+				AND fk_status = #{fkStatus}
+			</if>
+            <if test="points!=null">
+				AND points = #{points}
+			</if>
+            <if test="singlepoints!=null">
+				AND singlepoints = #{singlepoints}
+			</if>
+            <if test="multipoints!=null">
+				AND multipoints = #{multipoints}
+			</if>
+            <if test="judgepoints!=null">
+				AND judgepoints = #{judgepoints}
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				AND fk_teacher = #{fkTeacher}
+			</if>
+            <if test="delFlag!=null">
+				AND del_flag = #{delFlag}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addExam" parameterType="ExamVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="title!=null and ''!=title">
+				title,
+			</if>
+            <if test="timelimit!=null">
+				timelimit,
+			</if>
+            <if test="endtime!=null">
+				endtime,
+			</if>
+            <if test="fkStatus!=null">
+				fk_status,
+			</if>
+            <if test="points!=null">
+				points,
+			</if>
+            <if test="singlepoints!=null">
+				singlepoints,
+			</if>
+            <if test="multipoints!=null">
+				multipoints,
+			</if>
+            <if test="judgepoints!=null">
+				judgepoints,
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher,
+			</if>
+            <if test="delFlag!=null">
+				del_flag,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="title!=null and ''!=title">
+				#{title},
+			</if>
+            <if test="timelimit!=null">
+				#{timelimit},
+			</if>
+            <if test="endtime!=null">
+				#{endtime},
+			</if>
+            <if test="fkStatus!=null">
+				#{fkStatus},
+			</if>
+            <if test="points!=null">
+				#{points},
+			</if>
+            <if test="singlepoints!=null">
+				#{singlepoints},
+			</if>
+            <if test="multipoints!=null">
+				#{multipoints},
+			</if>
+            <if test="judgepoints!=null">
+				#{judgepoints},
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				#{fkTeacher},
+			</if>
+            <if test="delFlag!=null">
+				#{delFlag},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateExam" parameterType="ExamVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="title!=null and ''!=title">
+				title = #{title},
+			</if>
+            <if test="timelimit!=null">
+				timelimit = #{timelimit},
+			</if>
+            <if test="endtime!=null">
+				endtime = #{endtime},
+			</if>
+            <if test="fkStatus!=null">
+				fk_status = #{fkStatus},
+			</if>
+            <if test="points!=null">
+				points = #{points},
+			</if>
+            <if test="singlepoints!=null">
+				singlepoints = #{singlepoints},
+			</if>
+            <if test="multipoints!=null">
+				multipoints = #{multipoints},
+			</if>
+            <if test="judgepoints!=null">
+				judgepoints = #{judgepoints},
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher = #{fkTeacher},
+			</if>
+            <if test="delFlag!=null">
+				del_flag = #{delFlag},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailExam" resultMap="examMapper" parameterType="ExamVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listExam" resultMap="examMapper" parameterType="ExamVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listExamPage" resultMap="examMapper" parameterType="ExamVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countExam" resultType="java.lang.Integer" parameterType="ExamVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteExam" parameterType="ExamVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+    <select id="listExamByClassId" parameterType="ClassVO" resultType="ExamDO">
+        select *
+        from exam where id in(
+        select fk_exam from
+        exam_class ec where ec.fk_class=1
+        )
+    </select>
+
+</mapper>

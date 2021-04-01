@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wx.exam.mapper.TeacherClassMapper">
+
+	<resultMap id="teacherClassMapper" type="TeacherClassDO">
+        <result property="id" column="id"/>
+        <result property="fkTeacher" column="fk_teacher"/>
+        <result property="fkClass" column="fk_class"/>
+	</resultMap>
+
+    <sql id="_table">
+        teacher_class
+	</sql>
+
+	<sql id="_fields">
+		id,fk_teacher,fk_class
+	</sql>
+
+	<sql id="_condition">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+				AND id = #{id}
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				AND fk_teacher = #{fkTeacher}
+			</if>
+            <if test="fkClass!=null">
+				AND fk_class = #{fkClass}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="_primaryKey_condition">
+		WHERE id = #{id}
+	</sql>
+
+	<sql id="_order">
+        <if test="sortByParams!= null and sortByParams.size()>0" >
+            ORDER BY
+            <foreach collection="sortByParams.keys" index="index" item="sortByParamKey" separator=",">
+                <![CDATA[${sortByParamKey} ${sortByParams[sortByParamKey]}]]>
+            </foreach>
+        </if>
+	</sql>
+
+    <insert id="addTeacherClass" parameterType="TeacherClassVO" keyProperty="id">
+        INSERT INTO <include refid="_table"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				id,
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher,
+			</if>
+            <if test="fkClass!=null">
+				fk_class,
+			</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+				#{id},
+			</if>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				#{fkTeacher},
+			</if>
+            <if test="fkClass!=null">
+				#{fkClass},
+			</if>
+        </trim>
+    </insert>
+
+    <update id="updateTeacherClass" parameterType="TeacherClassVO">
+        UPDATE <include refid="_table"/>
+        <set>
+            <if test="fkTeacher!=null and ''!=fkTeacher">
+				fk_teacher = #{fkTeacher},
+			</if>
+            <if test="fkClass!=null">
+				fk_class = #{fkClass},
+			</if>
+        </set>
+        <include refid="_primaryKey_condition"/>
+    </update>
+
+    <select id="findDetailTeacherClass" resultMap="teacherClassMapper" parameterType="TeacherClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </select>
+
+    <select id="listTeacherClass" resultMap="teacherClassMapper" parameterType="TeacherClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+	    <include refid="_order"/>
+    </select>
+
+    <select id="listTeacherClassPage" resultMap="teacherClassMapper" parameterType="TeacherClassVO">
+        SELECT
+        <include refid="_fields"/>
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+        <include refid="_order"/>
+        <if test="startRecord != null and pageSize != null and pageSize >0">
+            limit #{startRecord},#{pageSize}
+        </if>
+	    <if test="!(startRecord != null and pageSize != null and pageSize >0)">
+		    limit 0,15
+	    </if>
+    </select>
+
+    <select id="countTeacherClass" resultType="java.lang.Integer" parameterType="TeacherClassVO">
+        SELECT
+        COUNT(*)
+        FROM <include refid="_table"/>
+        <include refid="_condition"/>
+    </select>
+
+    <delete id="deleteTeacherClass" parameterType="TeacherClassVO">
+        DELETE FROM <include refid="_table"/>
+        <include refid="_primaryKey_condition"/>
+    </delete>
+
+    <delete id="deleteTeacherClassById" parameterType="integer">
+        delete from teacher_class where fk_teacher=#{id}
+    </delete>
+
+</mapper>
