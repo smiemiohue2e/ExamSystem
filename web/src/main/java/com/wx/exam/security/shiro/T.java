@@ -13,5 +13,7 @@ public class T {
         System.out.println(md5Hash1.toString());//3f56a3da5002143df504b83118427e9b
         Md5Hash md5Hash2=new Md5Hash("admin","wangwu");
         System.out.println(md5Hash2.toString());//84ea527f5549e2de551f604238f3e5d0
+        Md5Hash md5Hash3=new Md5Hash("wx","wx");
+        System.out.println(md5Hash3.toString());
     }
 }

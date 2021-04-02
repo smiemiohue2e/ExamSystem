@@ -31,7 +31,7 @@ public class ManagerInfoController {
     @RequestMapping("/password/check")
     @ResponseBody
     public Result check(String password, HttpSession httpSession){
-        Manager manager = (Manager)httpSession.getAttribute("manager");
+        ManagerDO manager = (ManagerDO)httpSession.getAttribute("manager");
         Md5Hash md5Hash=new Md5Hash(password,manager.getName());
         if(manager.getPassword().equals(md5Hash.toString())){
             return new Result(Result.CODE_SUCCESS,"密码正确");
@@ -46,15 +46,17 @@ public class ManagerInfoController {
         ManagerDO manager = (ManagerDO) httpSession.getAttribute("manager");
 
         Md5Hash md5Hash=new Md5Hash(oldPassword,manager.getName());
-        if(!manager.getPassword().equals(md5Hash.toString())){
+        if(!manager.getPassword().equals(md5Hash.toString())){//防止暴力
             return "error";
         }
 
         manager.setModified(1);
-        manager.setPassword(new Md5Hash(newPassword,manager.getName()).toString());
+        //manager.setPassword(new Md5Hash(newPassword,manager.getName()).toString());
        //int i= managerService.update(manager);
         ManagerVO managerVO=new ManagerVO();
-        BeanUtils.copyProperties(managerVO,manager);
+        managerVO.setId(manager.getId());
+        //BeanUtils.copyProperties(managerVO,manager);
+        managerVO.setPassword(new Md5Hash(newPassword,manager.getName()).toString());
         Result result = managerService.updateManager(managerVO);
         model.addAttribute("message",result.getMsg());
        model.addAttribute("url","/admin/index");

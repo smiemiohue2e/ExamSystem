@@ -1,6 +1,8 @@
 package com.wx.exam.controller;
 
 import com.wx.exam.utils.Base64Util;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.junit.jupiter.api.Test;
 
 public class T {
 
@@ -11,4 +13,5 @@ public class T {
         System.out.println(Base64Util.encode("你好".getBytes()));
         System.out.println(Base64Util.decode("5L2g5aW9"));
     }
+
 }

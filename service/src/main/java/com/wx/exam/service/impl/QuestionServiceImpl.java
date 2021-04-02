@@ -89,7 +89,7 @@ public class QuestionServiceImpl implements QuestionService {
         //页码越界判断
         Integer count = questionJudgeMapper.countQuestionJudge(questionJudgeVO);
         int max = (count + questionJudgeVO.getPageSize() - 1) / questionJudgeVO.getPageSize();
-        if (max != 0) {
+        if (max != 0) {//todo  防止重定向次数过多
             if (questionJudgeVO.getPageCode() > max) {
                 //questionChoiceVO.setPageCode(max);
                 throw new PageCodeException("页码越界了", max);
@@ -113,7 +113,7 @@ public class QuestionServiceImpl implements QuestionService {
                 , count, questionJudgeVO.getSize()
         );
         return pageBean;
-        //如果数据库中没有这个老师的数据就会重定向次数过多？
+        //todo 如果数据库中没有这个老师的数据就会重定向次数过多？
     }
 
     /*添加判断题

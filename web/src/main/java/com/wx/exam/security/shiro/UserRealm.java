@@ -64,18 +64,6 @@ public class UserRealm extends AuthorizingRealm {
 
         UsernameTypePasswordToken token = (UsernameTypePasswordToken) authenticationToken;
         if (token.userType == UsernameTypePasswordToken.MANAGER) {
-            /*ManagerExample managerExample=new ManagerExample();
-            ManagerExample.Criteria criteria = managerExample.createCriteria();
-            criteria.andNameLike(token.getUsername());
-            List<Manager> managers = managerMapper.selectByExample(managerExample);
-            if(managers!=null&&!managers.isEmpty()){
-                Manager manager = managers.get(0);
-                SimpleAuthenticationInfo info
-                        =new SimpleAuthenticationInfo(manager,manager.getPassword(),getName());
-                info.setCredentialsSalt(ByteSource.Util.bytes(manager.getName().getBytes()));
-                return info;
-            }
-            return null;*/
             ManagerVO managerVO=new ManagerVO();
             managerVO.setName(token.getUsername());
             ManagerDO manager = managerService.listManager(managerVO);
