@@ -6,7 +6,7 @@ import java.io.Serializable;
  * <br/>
  * Created by wangxiao on 2018/07/24
  */
-public class ExamClassVO implements Serializable {
+public class ExamClassVO extends Query implements Serializable {
     private static final long serialVersionUID = -8847079170890136972L;
 
     private Integer id;

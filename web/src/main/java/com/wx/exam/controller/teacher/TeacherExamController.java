@@ -107,4 +107,14 @@ public class TeacherExamController {
         examVO.setFkStatus(ExamUtils.getStatusNumByEN(status));
        return examService.updateExamStatus(examVO);
     }
+
+    @RequestMapping("/statistics/{eid}")
+    public String toStatistics(@PathVariable Integer eid ,Model model){
+        return "teacher/statistics";
+    }
+
+    @RequestMapping("/statistics/do/{eid}")
+    public void statistics(@PathVariable Integer eid ,Model model){
+
+    }
 }

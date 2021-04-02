@@ -235,7 +235,7 @@
         select *
         from exam where id in(
         select fk_exam from
-        exam_class ec where ec.fk_class=1
+        exam_class ec where ec.fk_class=#{id}
         )
     </select>
 
