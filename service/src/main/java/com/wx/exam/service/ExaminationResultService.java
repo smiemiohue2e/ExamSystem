@@ -3,8 +3,10 @@ package com.wx.exam.service;
 
 import com.wx.exam.pojo.data.ExaminationResultDO;
 import com.wx.exam.pojo.vo.ExaminationResultVO;
+import com.wx.exam.utils.PageBean;
 import com.wx.exam.utils.Result;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ public interface ExaminationResultService {
 	Result updateExaminationResult(ExaminationResultVO examinationResultVO) throws Exception;
 	
 	Result findDetailExaminationResult(ExaminationResultVO examinationResultVO) throws Exception;
-	
+
 	List<ExaminationResultDO> listExaminationResult(ExaminationResultVO examinationResultVO) throws Exception;
 
     Result listExaminationResultPage(ExaminationResultVO examinationResultVO) throws Exception;
@@ -26,4 +28,6 @@ public interface ExaminationResultService {
 	Result countExaminationResult(ExaminationResultVO examinationResultVO) throws Exception;
 	
 	Result deleteExaminationResult(ExaminationResultVO examinationResultVO) throws Exception;
+
+	PageBean<ExaminationResultVO> listExaminationResultBySid(ExaminationResultVO resultVO) throws InvocationTargetException, IllegalAccessException;
 }

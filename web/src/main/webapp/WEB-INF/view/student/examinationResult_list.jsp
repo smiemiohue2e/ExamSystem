@@ -57,7 +57,7 @@
 							<tr>
 								<td>${note.id}</td>
 								<td>
-									<a href="student/notes/view/${note.id}">${note.examtitle}</a>
+									<a href="student/notes/view/${note.id}">${note.examTitle}</a>
 								</td>
 								<td>${note.point}</td>
 								<td>
