@@ -87,7 +87,7 @@ public class ExaminationResultServiceImpl implements ExaminationResultService {
 		}
 		System.out.println(list);
 		PageBean<ExaminationResultVO> pageBean=new PageBean<ExaminationResultVO>(
-				list,query.getPageCode(),query.getPageSize(),count,query.getSize()
+				list,query.getPageSize(),query.getPageCode(),count,query.getSize()
 		);
 		return pageBean;
 	}

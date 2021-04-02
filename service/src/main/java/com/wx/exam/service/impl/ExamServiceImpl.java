@@ -210,6 +210,7 @@ public class ExamServiceImpl implements ExamService {
     public Boolean hasJoined(Integer eid, String id) throws Exception {
         ExaminationResultVO resultVO=new ExaminationResultVO();
         resultVO.setFkStudent(id);
+        resultVO.setFkExam(eid);
         List<ExaminationResultDO>  ResultDOS = examinationResultService.listExaminationResult(resultVO);
         if(ResultDOS!=null&&!ResultDOS.isEmpty()){
             return true;
@@ -245,42 +246,47 @@ public class ExamServiceImpl implements ExamService {
             addQuestionId(eid,choiceIds,judgeIds);
             // System.out.println(choiceIds+" "+judgeIds);
 
-            //查到所有单选题信息
-       List<QuestionChoiceDO> choiceDOS=  questionChoiceMapper.listQuestionChoiceByIdIn(choiceIds);
-        for (QuestionChoiceDO choiceDO : choiceDOS) {
-            QuestionListVO vo=new QuestionListVO();
-            //vo.setAnswer(choiceDO.getAnswer());
-            vo.setPoint(choiceDO.getScore().intValue());
-            //vo.setAnswerFacade(AnswerUtils.getAnserFacade(choiceDO.getType(),choiceDO.getAnswer()));
-            vo.setTitle(choiceDO.getQuestion());
-            //vo.setType(choiceDO.getType()+"");
-            vo.setOptiona(choiceDO.getOptiona());
-            vo.setOptionb(choiceDO.getOptionb());
-            vo.setOptionc(choiceDO.getOptionc());
-            vo.setOptiond(choiceDO.getOptiond());
-            vo.setId(choiceDO.getId());
-            if(choiceDO.getType()==QuestionType.SINGLE){
-                vo.setType(QuestionType.SINLE_CN);
-                beginExamVO.addSingleQuestion(vo);
-            }else{
-                vo.setType(QuestionType.MULTI_CN);
-                beginExamVO.addMultiQuestion(vo);
+            if(!choiceIds.isEmpty()){
+                //查到所有单选题信息
+                List<QuestionChoiceDO> choiceDOS=  questionChoiceMapper.listQuestionChoiceByIdIn(choiceIds);
+                for (QuestionChoiceDO choiceDO : choiceDOS) {
+                    QuestionListVO vo=new QuestionListVO();
+                    //vo.setAnswer(choiceDO.getAnswer());
+                    vo.setPoint(choiceDO.getScore().intValue());
+                    //vo.setAnswerFacade(AnswerUtils.getAnserFacade(choiceDO.getType(),choiceDO.getAnswer()));
+                    vo.setTitle(choiceDO.getQuestion());
+                    //vo.setType(choiceDO.getType()+"");
+                    vo.setOptiona(choiceDO.getOptiona());
+                    vo.setOptionb(choiceDO.getOptionb());
+                    vo.setOptionc(choiceDO.getOptionc());
+                    vo.setOptiond(choiceDO.getOptiond());
+                    vo.setId(choiceDO.getId());
+                    if(choiceDO.getType()==QuestionType.SINGLE){
+                        vo.setType(QuestionType.SINLE_CN);
+                        beginExamVO.addSingleQuestion(vo);
+                    }else{
+                        vo.setType(QuestionType.MULTI_CN);
+                        beginExamVO.addMultiQuestion(vo);
+                    }
+                }
             }
-        }
+
 
         //判断题
-        List<QuestionJudgeDO> judgeDOS=  questionJudgeMapper.listQuestionJudgeByIdIn(judgeIds);
-        for (QuestionJudgeDO judgeDO : judgeDOS) {
-            QuestionListVO vo=new QuestionListVO();
-            vo.setId(judgeDO.getId());
-            vo.setTitle(judgeDO.getQuestion());
-            vo.setPoint(judgeDO.getScore().intValue());
-            vo.setType(QuestionType.JUDGE_CN);
-            beginExamVO.addJudgeQuestion(vo);
-        }
+       if(!judgeIds.isEmpty()){
+           List<QuestionJudgeDO> judgeDOS=  questionJudgeMapper.listQuestionJudgeByIdIn(judgeIds);
+           for (QuestionJudgeDO judgeDO : judgeDOS) {
+               QuestionListVO vo=new QuestionListVO();
+               vo.setId(judgeDO.getId());
+               vo.setTitle(judgeDO.getQuestion());
+               vo.setPoint(judgeDO.getScore().intValue());
+               vo.setType(QuestionType.JUDGE_CN);
+               beginExamVO.addJudgeQuestion(vo);
+           }
+       }
+
        // System.out.println(beginExamVO);
         return beginExamVO;
-
     }
 
     /**
@@ -301,60 +307,65 @@ public class ExamServiceImpl implements ExamService {
         ArrayList<Integer> judgeIds=new ArrayList<>();
 
         addQuestionId(Integer.parseInt(examAnswerVO.getEid()),choiceIds,judgeIds);
-        
-        //根据题目id分别获取题目详情
-        List<QuestionChoiceDO> choiceDOS = questionChoiceMapper.listQuestionChoiceByIdIn(choiceIds);
-
-        List<QuestionJudgeDO> JudgeDOS = questionJudgeMapper.listQuestionJudgeByIdIn(judgeIds);
 
         //记录总分
         int points=0;
-        //遍历选择题
-        for (QuestionChoiceDO choiceDO : choiceDOS) {
-            //遍历学生答案
-            for (ExamAnswerQuestions answer : examAnswerVO.getQuestions()) {
-                //如果id和类型一致
-                if(choiceDO.getId()==Integer.parseInt(answer.getId())&&choiceDO.getType()==answer.getType()){
-                    ExaminationResulquestionVO resulquestionVO=new ExaminationResulquestionVO();
-                    //试卷表，考试结果表的id与考试详情表的外键 一样
-                    resulquestionVO.setFkExaminationResult(detailExam.getId());
-                    resulquestionVO.setFkQuestion(choiceDO.getId());
-                    resulquestionVO.setType(choiceDO.getType());
-                    //判断答案答对与否
-                    if(choiceDO.getAnswer().equals(answer.getAnswer())){
-                        points+=choiceDO.getScore().intValue();
-                        resulquestionVO.setIsRight(0);
-                    }else{
-                        resulquestionVO.setIsRight(1);
-                        resulquestionVO.setWrongAnswer(answer.getAnswer());
+
+        if(!choiceIds.isEmpty()){
+            //根据题目id分别获取题目详情
+            List<QuestionChoiceDO> choiceDOS = questionChoiceMapper.listQuestionChoiceByIdIn(choiceIds);
+            //遍历选择题
+            for (QuestionChoiceDO choiceDO : choiceDOS) {
+                //遍历学生答案
+                for (ExamAnswerQuestions answer : examAnswerVO.getQuestions()) {
+                    //如果id和类型一致
+                    if(choiceDO.getId()==Integer.parseInt(answer.getId())&&choiceDO.getType()==answer.getType()){
+                        ExaminationResulquestionVO resulquestionVO=new ExaminationResulquestionVO();
+                        //试卷表，考试结果表的id与考试详情表的外键 一样
+                        resulquestionVO.setFkExaminationResult(detailExam.getId());
+                        resulquestionVO.setFkQuestion(choiceDO.getId());
+                        resulquestionVO.setType(choiceDO.getType());
+                        //判断答案答对与否
+                        if(choiceDO.getAnswer().equals(answer.getAnswer())){
+                            points+=choiceDO.getScore().intValue();
+                            resulquestionVO.setIsRight(0);
+                        }else{
+                            resulquestionVO.setIsRight(1);
+                            resulquestionVO.setWrongAnswer(answer.getAnswer());
+                        }
+                        examinationResulquestionMapper.addExaminationResulquestion(resulquestionVO);
                     }
-                    examinationResulquestionMapper.addExaminationResulquestion(resulquestionVO);
                 }
             }
         }
 
-        //遍历判断题
-        for (QuestionJudgeDO judgeDO : JudgeDOS) {
-            for (ExamAnswerQuestions answer : examAnswerVO.getQuestions()) {
-                //如果id和类型一致
-                if(judgeDO.getId()==Integer.parseInt(answer.getId())&&judgeDO.getType()==answer.getType()){
-                    ExaminationResulquestionVO resulquestionVO=new ExaminationResulquestionVO();
-                    //试卷表，考试结果表的id与考试详情表的外键 一样
-                    resulquestionVO.setType(judgeDO.getType());
-                    resulquestionVO.setFkExaminationResult(detailExam.getId());
-                    resulquestionVO.setFkQuestion(judgeDO.getId());
-                    //判断答案答对与否
-                    if(judgeDO.getAnswer().equals(answer.getAnswer())){
-                        resulquestionVO.setIsRight(0);
-                        points+=judgeDO.getScore().intValue();
-                    }else{
-                        resulquestionVO.setIsRight(1);
-                        resulquestionVO.setWrongAnswer(answer.getAnswer());
+        if(!judgeIds.isEmpty()){
+            List<QuestionJudgeDO> JudgeDOS = questionJudgeMapper.listQuestionJudgeByIdIn(judgeIds);
+            //遍历判断题
+            for (QuestionJudgeDO judgeDO : JudgeDOS) {
+                for (ExamAnswerQuestions answer : examAnswerVO.getQuestions()) {
+                    //如果id和类型一致
+                    if(judgeDO.getId()==Integer.parseInt(answer.getId())&&judgeDO.getType()==answer.getType()){
+                        ExaminationResulquestionVO resulquestionVO=new ExaminationResulquestionVO();
+                        //试卷表，考试结果表的id与考试详情表的外键 一样
+                        resulquestionVO.setType(judgeDO.getType());
+                        resulquestionVO.setFkExaminationResult(detailExam.getId());
+                        resulquestionVO.setFkQuestion(judgeDO.getId());
+                        //判断答案答对与否
+                        if(judgeDO.getAnswer().equals(answer.getAnswer())){
+                            resulquestionVO.setIsRight(0);
+                            points+=judgeDO.getScore().intValue();
+                        }else{
+                            resulquestionVO.setIsRight(1);
+                            resulquestionVO.setWrongAnswer(answer.getAnswer());
+                        }
+                        examinationResulquestionMapper.addExaminationResulquestion(resulquestionVO);
                     }
-                    examinationResulquestionMapper.addExaminationResulquestion(resulquestionVO);
                 }
             }
         }
+
+
         //将考试结果信息插入表中
         ExaminationResultVO resultVO=new ExaminationResultVO();
         resultVO.setId(detailExam.getId());
