@@ -1,4 +1,4 @@
-//学生参加考试
+﻿//学生参加考试
 $(function () {
 
     //是否结束
@@ -75,6 +75,7 @@ $(function () {
             answer = $checkeds.length > 0 ? $checkeds.val() : "";
             result.questions.push({
                 id: id,
+                type: 1,
                 answer: answer
             });
         });
@@ -89,6 +90,7 @@ $(function () {
             });
             result.questions.push({
                 id: id,
+                type: 2,
                 answer: answer.substring(0, answer.length - 1)
             });
         });
@@ -100,17 +102,18 @@ $(function () {
             answer = $checkeds.length > 0 ? $checkeds.val() : "";
             result.questions.push({
                 id: id,
+                type: 3,
                 answer: answer
             });
         });
         $.post("student/exam/submit", "result=" + JSON.stringify(result), function (data) {
-            if (data.result === "0") {
-                Tips.showError(data.message);
+            if (data.code != 200) {
+                Tips.showError(data.msg);
                 setTimeout(function () {
                     window.location.href = $("#context-path").val() + "student/index";
                 }, 2000);
-            } else if (data.result === "1") {
-                Tips.showSuccess("交卷成功，您得了" + data.point + "分!");
+            } else {
+                Tips.showSuccess("交卷成功，您得了" + data.data.point + "分!");
                 setTimeout(function () {
                     window.location.href = $("#context-path").val() + "student/index";
                 }, 2000);

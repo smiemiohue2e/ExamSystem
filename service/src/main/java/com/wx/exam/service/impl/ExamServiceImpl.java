@@ -52,6 +52,12 @@ public class ExamServiceImpl implements ExamService {
     @Autowired
     QuestionJudgeMapper questionJudgeMapper;
 
+    @Autowired
+    ExaminationResulquestionMapper examinationResulquestionMapper;
+
+    @Autowired
+    ExaminationResultMapper examinationResultMapper;
+
     @Override
     public Result addExam(ExamVO examVO) throws Exception {
         Integer count = examMapper.addExam(examVO);
@@ -275,6 +281,95 @@ public class ExamServiceImpl implements ExamService {
        // System.out.println(beginExamVO);
         return beginExamVO;
 
+    }
+
+    /**
+     * 提交后评分
+     * @param examAnswerVO 学生答案
+     * @param sid 学生id
+     * @return
+     */
+    @Override
+    public Result marking(ExamAnswerVO examAnswerVO, String sid) {
+        //通过试卷id查询试卷详情
+        ExamVO examVO=new ExamVO();
+        examVO.setId(Integer.parseInt(examAnswerVO.getEid()));
+        ExamDO detailExam = examMapper.findDetailExam(examVO);
+        
+        //查询到此套试卷所有选择题和判断题id
+        ArrayList<Integer> choiceIds=new ArrayList<>();
+        ArrayList<Integer> judgeIds=new ArrayList<>();
+
+        addQuestionId(Integer.parseInt(examAnswerVO.getEid()),choiceIds,judgeIds);
+        
+        //根据题目id分别获取题目详情
+        List<QuestionChoiceDO> choiceDOS = questionChoiceMapper.listQuestionChoiceByIdIn(choiceIds);
+
+        List<QuestionJudgeDO> JudgeDOS = questionJudgeMapper.listQuestionJudgeByIdIn(judgeIds);
+
+        //记录总分
+        int points=0;
+        //遍历选择题
+        for (QuestionChoiceDO choiceDO : choiceDOS) {
+            //遍历学生答案
+            for (ExamAnswerQuestions answer : examAnswerVO.getQuestions()) {
+                //如果id和类型一致
+                if(choiceDO.getId()==Integer.parseInt(answer.getId())&&choiceDO.getType()==answer.getType()){
+                    ExaminationResulquestionVO resulquestionVO=new ExaminationResulquestionVO();
+                    //试卷表，考试结果表的id与考试详情表的外键 一样
+                    resulquestionVO.setFkExaminationResult(detailExam.getId());
+                    resulquestionVO.setFkQuestion(choiceDO.getId());
+                    resulquestionVO.setType(choiceDO.getType());
+                    //判断答案答对与否
+                    if(choiceDO.getAnswer().equals(answer.getAnswer())){
+                        points+=choiceDO.getScore().intValue();
+                        resulquestionVO.setIsRight(0);
+                    }else{
+                        resulquestionVO.setIsRight(1);
+                        resulquestionVO.setWrongAnswer(answer.getAnswer());
+                    }
+                    examinationResulquestionMapper.addExaminationResulquestion(resulquestionVO);
+                }
+            }
+        }
+
+        //遍历判断题
+        for (QuestionJudgeDO judgeDO : JudgeDOS) {
+            for (ExamAnswerQuestions answer : examAnswerVO.getQuestions()) {
+                //如果id和类型一致
+                if(judgeDO.getId()==Integer.parseInt(answer.getId())&&judgeDO.getType()==answer.getType()){
+                    ExaminationResulquestionVO resulquestionVO=new ExaminationResulquestionVO();
+                    //试卷表，考试结果表的id与考试详情表的外键 一样
+                    resulquestionVO.setType(judgeDO.getType());
+                    resulquestionVO.setFkExaminationResult(detailExam.getId());
+                    resulquestionVO.setFkQuestion(judgeDO.getId());
+                    //判断答案答对与否
+                    if(judgeDO.getAnswer().equals(answer.getAnswer())){
+                        resulquestionVO.setIsRight(0);
+                        points+=judgeDO.getScore().intValue();
+                    }else{
+                        resulquestionVO.setIsRight(1);
+                        resulquestionVO.setWrongAnswer(answer.getAnswer());
+                    }
+                    examinationResulquestionMapper.addExaminationResulquestion(resulquestionVO);
+                }
+            }
+        }
+        //将考试结果信息插入表中
+        ExaminationResultVO resultVO=new ExaminationResultVO();
+        resultVO.setId(detailExam.getId());
+        resultVO.setFkStudent(sid);
+        resultVO.setDelFlag(0);
+        resultVO.setExamTitle(detailExam.getTitle());
+        resultVO.setFkExam(detailExam.getId());
+        resultVO.setPoint(points);
+        resultVO.setTime(detailExam.getEndtime());
+        Integer row = examinationResultMapper.addExaminationResult(resultVO);
+        if(row>0){
+            return new Result(Result.CODE_SUCCESS,resultVO);
+        }
+
+        return null;
     }
 
     private void addQuestionId(Integer eid, ArrayList<Integer> choiceIds, ArrayList<Integer> judgeIds) {

@@ -1,10 +1,7 @@
 package com.wx.exam.service;
 
 
-import com.wx.exam.pojo.vo.BeginExamVO;
-import com.wx.exam.pojo.vo.ClassVO;
-import com.wx.exam.pojo.vo.ExamQuestionVO;
-import com.wx.exam.pojo.vo.ExamVO;
+import com.wx.exam.pojo.vo.*;
 import com.wx.exam.utils.PageBean;
 import com.wx.exam.utils.Result;
 
@@ -38,4 +35,7 @@ public interface ExamService {
 	Boolean hasJoined(Integer eid, String id) throws Exception;
 
 	BeginExamVO joined(Integer eid);
+
+	//提交后评分
+    Result marking(ExamAnswerVO examAnswerVO, String id);
 }

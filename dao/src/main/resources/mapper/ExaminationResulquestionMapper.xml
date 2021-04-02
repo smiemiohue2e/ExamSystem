@@ -56,7 +56,7 @@
         </if>
 	</sql>
 
-    <insert id="addExaminationResulquestion" parameterType="ExaminationResulquestionVO" keyProperty="id">
+    <insert id="addExaminationResulquestion" parameterType="ExaminationResulquestionVO" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO <include refid="_table"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id!=null">

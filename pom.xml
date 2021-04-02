@@ -111,14 +111,16 @@
             <version>1.2</version>
         </dependency>
 
-        <!-- json数据 2018年7月18日14:22:08 修改json包-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
-        <!--<artifactId>jackson-dataformat-xml</artifactId>-->
-        <!--<version>2.8.11</version>-->
-        <!--</dependency>-->
-
+<!--
+         json数据 2018年7月18日14:22:08 修改json包
+-->
         <dependency>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-xml</artifactId>
+        <version>2.8.11</version>
+        </dependency>
+
+       <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.8.6</version>

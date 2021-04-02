@@ -16,6 +16,17 @@ public class ExaminationResulquestionVO implements Serializable {
     /**
 	 * 错误答案
 	 */
+
+    Integer type;
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 	private String wrongAnswer;
 
     private Integer fkExaminationResult;
