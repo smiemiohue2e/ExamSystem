@@ -324,7 +324,7 @@ public class ExamServiceImpl implements ExamService {
                         //试卷表，考试结果表的id与考试详情表的外键 一样
                         resulquestionVO.setFkExaminationResult(detailExam.getId());
                         resulquestionVO.setFkQuestion(choiceDO.getId());
-                        resulquestionVO.setType(choiceDO.getType());
+                        resulquestionVO.setFkQtype(choiceDO.getType());
                         //判断答案答对与否
                         if(choiceDO.getAnswer().equals(answer.getAnswer())){
                             points+=choiceDO.getScore().intValue();
@@ -348,7 +348,7 @@ public class ExamServiceImpl implements ExamService {
                     if(judgeDO.getId()==Integer.parseInt(answer.getId())&&judgeDO.getType()==answer.getType()){
                         ExaminationResulquestionVO resulquestionVO=new ExaminationResulquestionVO();
                         //试卷表，考试结果表的id与考试详情表的外键 一样
-                        resulquestionVO.setType(judgeDO.getType());
+                        resulquestionVO.setFkQtype(judgeDO.getType());
                         resulquestionVO.setFkExaminationResult(detailExam.getId());
                         resulquestionVO.setFkQuestion(judgeDO.getId());
                         //判断答案答对与否

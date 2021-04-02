@@ -4,23 +4,31 @@ import java.io.Serializable;
 
 /** 
  * <br/>
- * Created by wangxiao on 2018/07/27
+ * Created by wangxiao on 2018/07/28
  */
 public class ExaminationResulquestionDO implements Serializable {
-    private static final long serialVersionUID = -8134331428099354061L;
+    private static final long serialVersionUID = -6100551985651950547L;
 
     private Integer id;
 
-    private Integer isRight;
+    /**
+	 * 是否正确
+	 */
+	private Integer isRight;
 
     /**
 	 * 错误答案
 	 */
 	private String wrongAnswer;
 
-    private Integer fkExaminationResult;
+    /**
+	 * 对应examination_result
+	 */
+	private Integer fkExaminationResult;
 
     private Integer fkQuestion;
+
+    private Integer fkQtype;
 
     private Integer delFlag;
 
@@ -53,6 +61,12 @@ public class ExaminationResulquestionDO implements Serializable {
 	}
     public void setFkQuestion(Integer fkQuestion) {
 		this.fkQuestion = fkQuestion;
+	}
+    public Integer getFkQtype() {
+		return fkQtype;
+	}
+    public void setFkQtype(Integer fkQtype) {
+		this.fkQtype = fkQtype;
 	}
     public Integer getDelFlag() {
 		return delFlag;

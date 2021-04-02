@@ -3,6 +3,7 @@ package com.wx.exam.controller.student;
 import com.sun.glass.ui.Size;
 import com.wx.exam.pojo.Manager;
 import com.wx.exam.pojo.data.StudentDO;
+import com.wx.exam.pojo.vo.ExamResultViewVO;
 import com.wx.exam.pojo.vo.ExaminationResultVO;
 import com.wx.exam.service.ExaminationResultService;
 import com.wx.exam.utils.DataUtils;
@@ -44,5 +45,17 @@ public class ExamResultController {
         PageBean<ExaminationResultVO> pageBean= examinationResultService.listExaminationResultBySid(resultVO);
         model.addAttribute("pageBean",pageBean);
         return "student/examinationResult_list";
+    }
+
+    /**
+     * 查询考试各个题目情况
+     * @param eid
+     */
+    @RequestMapping("/view/{eid}")
+    public String view(@PathVariable Integer eid,HttpSession session,Model model){
+        StudentDO student =(StudentDO) session.getAttribute("student");
+        ExamResultViewVO view= examinationResultService.listExaminationResultView(eid,student.getId());
+        model.addAttribute("view",view);
+        return "student/examinationResult_view";
     }
 }

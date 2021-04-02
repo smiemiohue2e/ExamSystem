@@ -8,7 +8,7 @@ import java.util.List;
 
 /** 
  * <br/>
- * Created by wangxiao on 2018/07/27
+ * Created by wangxiao on 2018/07/28
  */
 @Repository
 public interface ExaminationResulquestionMapper {

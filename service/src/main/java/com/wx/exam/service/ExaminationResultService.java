@@ -2,6 +2,7 @@ package com.wx.exam.service;
 
 
 import com.wx.exam.pojo.data.ExaminationResultDO;
+import com.wx.exam.pojo.vo.ExamResultViewVO;
 import com.wx.exam.pojo.vo.ExaminationResultVO;
 import com.wx.exam.utils.PageBean;
 import com.wx.exam.utils.Result;
@@ -30,4 +31,12 @@ public interface ExaminationResultService {
 	Result deleteExaminationResult(ExaminationResultVO examinationResultVO) throws Exception;
 
 	PageBean<ExaminationResultVO> listExaminationResultBySid(ExaminationResultVO resultVO) throws InvocationTargetException, IllegalAccessException;
+
+	/**
+	 * 查询自己考试每道题的具体情况
+	 * @param eid
+	 * @param id
+	 * @return
+	 */
+    ExamResultViewVO listExaminationResultView(Integer eid, String id);
 }
